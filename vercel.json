@@ -1,8 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/privacy-policy", "destination": "/privacy-policy" },
-    { "source": "/terms-and-conditions", "destination": "/privacy-policy-terms-and-conditions" }
-  ],
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
