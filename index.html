@@ -103,6 +103,8 @@
     .portfolio-label h4{color:var(--white);font-size:16px;font-family:var(--font-display);font-weight:600}
     .portfolio-label span{color:var(--gray-400);font-size:13px}
     @media(max-width:768px){.portfolio-grid{grid-template-columns:1fr}}
+    @media(max-width:900px){#portfolio .container>div[style*="grid-template-columns:repeat(3"]{grid-template-columns:repeat(2,1fr)!important}}
+    @media(max-width:600px){#portfolio .container>div[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}}
     .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
     .testimonial-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:32px;transition:all .3s}
     .testimonial-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.06);transform:translateY(-3px)}
@@ -189,6 +191,7 @@
       <div class="nav-links">
         <a href="#services">Services</a>
         <a href="#portfolio">Our Work</a>
+        <a href="#guarantee">Guarantee</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
         <a href="tel:+19417043464" class="nav-phone">&#128222; (941) 704-3464</a>
@@ -209,7 +212,7 @@
           <a href="tel:+19417043464" class="btn-secondary">&#128222; (941) 704-3464</a>
         </div>
         <div class="hero-stats">
-          <div><div class="hero-stat-num">5+ Yrs</div><div class="hero-stat-label">Serving Sarasota</div></div>
+          <div><div class="hero-stat-num">100%</div><div class="hero-stat-label">Residential — Zero Commercial</div></div>
           <div><div class="hero-stat-num">5.0 &#9733;</div><div class="hero-stat-label">Google Rating</div></div>
           <div><div class="hero-stat-num">24hr</div><div class="hero-stat-label">Estimate Delivery</div></div>
         </div>
@@ -223,7 +226,8 @@
       <div class="trust-item"><span class="icon">&#128737;</span> Licensed &amp; Insured</div>
       <div class="trust-item"><span class="icon">&#11088;</span> 5-Star Rated</div>
       <div class="trust-item"><span class="icon">&#127912;</span> Sherwin-Williams &amp; Benjamin Moore</div>
-      <div class="trust-item"><span class="icon">&#10003;</span> Satisfaction Guaranteed</div>
+      <div class="trust-item"><span class="icon">&#128737;</span> 3-Year Guarantee</div>
+      <div class="trust-item"><span class="icon">&#10024;</span> 30-Day Touch-Up</div>
       <div class="trust-item"><span class="icon">&#127968;</span> Locally Owned</div>
     </div>
   </div>
@@ -297,21 +301,126 @@
     <div class="container">
       <div class="section-header">
         <span class="section-label">OUR WORK</span>
-        <h2 class="section-title">Recent Transformations</h2>
-        <p class="section-subtitle">Real projects. Real results. See what premium craftsmanship looks like.</p>
+        <h2 class="section-title">Recent <em style="color:var(--gold);font-style:normal;">Transformations</em></h2>
+        <p class="section-subtitle">Real projects. Real results. See what premium craftsmanship looks like across Sarasota's finest homes.</p>
       </div>
-      <div class="portfolio-grid">
-        <div class="portfolio-card reveal">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+
+        <!-- Card 1 — existing photo -->
+        <div class="portfolio-card reveal" style="aspect-ratio:4/3;">
           <img src="/images/interior-painting-sarasota-hallway-hero-1600x900.webp" width="1200" height="900" loading="lazy" decoding="async" alt="Interior painting project in Sarasota, FL">
-          <div class="portfolio-label"><span class="tag">INTERIOR</span><h4>Interior Painting &#8212; Sarasota, FL</h4><span>Clean lines &#8226; Smooth finish &#8226; Luxury look</span></div>
+          <div class="portfolio-label"><span class="tag">INTERIOR</span><h4>Interior Painting — Sarasota, FL</h4><span>Clean lines • Smooth finish • Luxury look</span></div>
         </div>
-        <div class="portfolio-card reveal reveal-delay-1">
+
+        <!-- Card 2 — existing photo -->
+        <div class="portfolio-card reveal reveal-delay-1" style="aspect-ratio:4/3;">
           <img src="/images/interior-painting-sarasota-ceiling-portfolio-1200x900.webp" width="1200" height="900" loading="lazy" decoding="async" alt="Ceiling and trim painting in Sarasota, FL">
-          <div class="portfolio-label"><span class="tag">DETAIL</span><h4>Ceiling &amp; Trim Painting &#8212; Sarasota, FL</h4><span>Crisp edges &#8226; Bright finish &#8226; Spotless work</span></div>
+          <div class="portfolio-label"><span class="tag">DETAIL</span><h4>Ceiling &amp; Trim Painting — Sarasota, FL</h4><span>Crisp edges • Bright finish • Spotless work</span></div>
         </div>
+
+        <!-- Card 3 — Cabinet Painting placeholder -->
+        <div class="portfolio-card reveal reveal-delay-2" style="aspect-ratio:4/3;background:linear-gradient(135deg,#1a1a1a 0%,#2b2b2b 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;border:1px solid rgba(198,167,104,0.2);">
+          <div style="width:60px;height:60px;border:1.5px solid rgba(198,167,104,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🗄️</div>
+          <div style="text-align:center;padding:0 24px;">
+            <div style="font-size:11px;color:var(--gold);letter-spacing:2px;font-weight:600;margin-bottom:8px;">CABINET REFINISHING</div>
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--white);margin-bottom:6px;">Kitchen Cabinet Painting</div>
+            <div style="font-size:13px;color:var(--gray-400);">Sarasota, FL — 2026</div>
+          </div>
+          <div class="portfolio-label"><span class="tag">CABINET</span><h4>Cabinet Refinishing — Sarasota, FL</h4><span>Factory finish • Premium coating • Zero brush marks</span></div>
+        </div>
+
+        <!-- Card 4 — Exterior placeholder -->
+        <div class="portfolio-card reveal" style="aspect-ratio:4/3;background:linear-gradient(135deg,#161616 0%,#252520 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;border:1px solid rgba(198,167,104,0.2);">
+          <div style="width:60px;height:60px;border:1.5px solid rgba(198,167,104,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🏡</div>
+          <div style="text-align:center;padding:0 24px;">
+            <div style="font-size:11px;color:var(--gold);letter-spacing:2px;font-weight:600;margin-bottom:8px;">EXTERIOR PAINTING</div>
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--white);margin-bottom:6px;">Full Exterior — Longboat Key</div>
+            <div style="font-size:13px;color:var(--gray-400);">Waterfront Estate — 2026</div>
+          </div>
+          <div class="portfolio-label"><span class="tag">EXTERIOR</span><h4>Exterior Painting — Longboat Key</h4><span>UV-resistant • Florida-rated coating • HOA approved</span></div>
+        </div>
+
+        <!-- Card 5 — Drywall placeholder -->
+        <div class="portfolio-card reveal reveal-delay-1" style="aspect-ratio:4/3;background:linear-gradient(135deg,#1c1a16 0%,#252318 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;border:1px solid rgba(198,167,104,0.2);">
+          <div style="width:60px;height:60px;border:1.5px solid rgba(198,167,104,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🔨</div>
+          <div style="text-align:center;padding:0 24px;">
+            <div style="font-size:11px;color:var(--gold);letter-spacing:2px;font-weight:600;margin-bottom:8px;">DRYWALL REPAIR</div>
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--white);margin-bottom:6px;">Level 5 Finish — Siesta Key</div>
+            <div style="font-size:13px;color:var(--gray-400);">Full Room Skim Coat — 2026</div>
+          </div>
+          <div class="portfolio-label"><span class="tag">DRYWALL</span><h4>Level 5 Finish — Siesta Key</h4><span>Seamless texture • Perfectly smooth • Paint-ready</span></div>
+        </div>
+
+        <!-- Card 6 — Interior Lakewood Ranch placeholder -->
+        <div class="portfolio-card reveal reveal-delay-2" style="aspect-ratio:4/3;background:linear-gradient(135deg,#151515 0%,#222220 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;border:1px solid rgba(198,167,104,0.2);">
+          <div style="width:60px;height:60px;border:1.5px solid rgba(198,167,104,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🖌️</div>
+          <div style="text-align:center;padding:0 24px;">
+            <div style="font-size:11px;color:var(--gold);letter-spacing:2px;font-weight:600;margin-bottom:8px;">INTERIOR PAINTING</div>
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--white);margin-bottom:6px;">Whole-Home Repaint</div>
+            <div style="font-size:13px;color:var(--gray-400);">Lakewood Ranch — 2026</div>
+          </div>
+          <div class="portfolio-label"><span class="tag">INTERIOR</span><h4>Whole-Home Repaint — Lakewood Ranch</h4><span>Emerald Interior • 4 bedrooms • 3-day completion</span></div>
+        </div>
+
       </div>
+
+      <!-- Portfolio note -->
+      <p style="text-align:center;margin-top:40px;font-size:13px;color:var(--gray-400);letter-spacing:0.5px;">
+        📸 &nbsp;Photo gallery updating — new project photos coming soon.
+        <a href="#estimate" style="color:var(--gold);text-decoration:none;margin-left:8px;">Request your estimate →</a>
+      </p>
     </div>
   </section>
+
+  <!-- GUARANTEE SECTION -->
+  <section id="guarantee" style="background:#111111;padding:100px 24px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#C6A768 30%,#C6A768 70%,transparent);"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(198,167,104,0.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(198,167,104,0.04) 0%,transparent 60%);pointer-events:none;"></div>
+    <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
+      <p style="font-family:'Outfit','Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:#C6A768;text-align:center;margin:0 0 20px;">OUR COMMITMENT</p>
+      <h2 style="font-family:'Playfair Display','Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:700;color:#FFFFFF;text-align:center;margin:0 0 16px;line-height:1.15;">Backed by Our <em style="color:#C6A768;font-style:italic;">Guarantee</em></h2>
+      <p style="font-family:'Outfit','Montserrat',sans-serif;font-size:17px;color:rgba(255,255,255,0.55);text-align:center;margin:0 auto 64px;max-width:520px;line-height:1.6;">Every Presiado project is protected by two layers of commitment — because premium work deserves premium protection.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;margin-bottom:64px;">
+        <!-- 3-Year Card -->
+        <div style="background:linear-gradient(145deg,#1C1C1C,#161616);border:1px solid rgba(198,167,104,0.25);border-radius:4px;padding:48px 40px;position:relative;overflow:hidden;transition:border-color 0.3s ease;" onmouseover="this.style.borderColor='rgba(198,167,104,0.5)'" onmouseout="this.style.borderColor='rgba(198,167,104,0.25)'">
+          <div style="position:absolute;top:0;left:0;width:60px;height:60px;background:linear-gradient(135deg,rgba(198,167,104,0.15) 0%,transparent 60%);"></div>
+          <div style="width:56px;height:56px;border:1.5px solid #C6A768;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:28px;position:relative;z-index:1;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" stroke="#C6A768" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12L11 14L15 10" stroke="#C6A768" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="display:inline-block;background:rgba(198,167,104,0.12);border:1px solid rgba(198,167,104,0.3);color:#C6A768;font-family:'Outfit','Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:5px 14px;border-radius:2px;margin-bottom:20px;">3 Years</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#FFFFFF;margin:0 0 16px;line-height:1.2;">White Glove<br>Workmanship Guarantee</h3>
+          <p style="font-family:'Outfit','Montserrat',sans-serif;font-size:15px;color:rgba(255,255,255,0.6);line-height:1.7;margin:0 0 28px;">Every project carries a full 3-year workmanship guarantee. If any defect in application, adhesion, or finish appears — we return and make it right. No conditions. No excuses.</p>
+          <div style="height:1px;background:rgba(198,167,104,0.2);margin-bottom:24px;"></div>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Covers all workmanship defects</li>
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Zero cost to you — ever</li>
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Applies to every project, every time</li>
+          </ul>
+        </div>
+        <!-- 30-Day Card -->
+        <div style="background:linear-gradient(145deg,#1C1C1C,#161616);border:1px solid rgba(198,167,104,0.25);border-radius:4px;padding:48px 40px;position:relative;overflow:hidden;transition:border-color 0.3s ease;" onmouseover="this.style.borderColor='rgba(198,167,104,0.5)'" onmouseout="this.style.borderColor='rgba(198,167,104,0.25)'">
+          <div style="position:absolute;top:0;left:0;width:60px;height:60px;background:linear-gradient(135deg,rgba(198,167,104,0.15) 0%,transparent 60%);"></div>
+          <div style="width:56px;height:56px;border:1.5px solid #C6A768;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:28px;position:relative;z-index:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="17" rx="2" stroke="#C6A768" stroke-width="1.5"/><path d="M3 9H21" stroke="#C6A768" stroke-width="1.5" stroke-linecap="round"/><path d="M8 2V6M16 2V6" stroke="#C6A768" stroke-width="1.5" stroke-linecap="round"/><path d="M8 14L11 17L16 12" stroke="#C6A768" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="display:inline-block;background:rgba(198,167,104,0.12);border:1px solid rgba(198,167,104,0.3);color:#C6A768;font-family:'Outfit','Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:5px 14px;border-radius:2px;margin-bottom:20px;">30 Days</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#FFFFFF;margin:0 0 16px;line-height:1.2;">Touch-Up<br>Promise</h3>
+          <p style="font-family:'Outfit','Montserrat',sans-serif;font-size:15px;color:rgba(255,255,255,0.6);line-height:1.7;margin:0 0 28px;">Within 30 days of completion, we return for a complimentary touch-up visit. We inspect the work alongside you and address every detail until every surface meets our White Glove standard.</p>
+          <div style="height:1px;background:rgba(198,167,104,0.2);margin-bottom:24px;"></div>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Scheduled after every project</li>
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Walk-through with homeowner</li>
+            <li style="font-family:'Outfit','Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.55);padding:6px 0;display:flex;align-items:center;gap:10px;"><span style="color:#C6A768;font-size:12px;">✦</span>Complimentary — always</li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align:center;padding-top:16px;">
+        <p style="font-family:'Outfit','Montserrat',sans-serif;font-size:13px;color:rgba(255,255,255,0.3);letter-spacing:0.08em;margin:0;"><span style="color:#C6A768;">✦</span> &nbsp; 3-Year White Glove Guarantee + 30-Day Touch-Up Promise — Standard on every Presiado project &nbsp; <span style="color:#C6A768;">✦</span></p>
+      </div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#C6A768 30%,#C6A768 70%,transparent);"></div>
+  </section>
+  <!-- END GUARANTEE SECTION -->
 
   <section class="section section-cream" id="testimonials">
     <div class="container">
@@ -374,7 +483,7 @@
         <div class="faq-item"><button class="faq-question">How long does a typical painting project take?<span class="faq-icon">+</span></button><div class="faq-answer"><p>A standard interior room takes 1-2 days. A full home interior (3-4 bedrooms) typically takes 4-7 days depending on prep work needed. Exteriors range from 3-7 days. We provide a specific timeline in your proposal.</p></div></div>
         <div class="faq-item"><button class="faq-question">Will you protect my furniture and floors?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Absolutely. Our Stealth Logistics method includes complete coverage of all furniture, fixtures, and flooring before any work begins. We perform daily cleanup so your home stays livable throughout the project. Many clients tell us they barely knew we were there.</p></div></div>
         <div class="faq-item"><button class="faq-question">Are you licensed and insured?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes. Presiado Home Improvement LLC is fully licensed and insured in the state of Florida. We carry general liability insurance and workers' compensation coverage for your complete protection.</p></div></div>
-        <div class="faq-item"><button class="faq-question">Do you offer a warranty on your work?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes. We stand behind every project with a workmanship guarantee. If anything doesn't meet the agreed-upon standard, we'll make it right at no additional cost. Additionally, the premium paints we use carry their own manufacturer warranties for added peace of mind.</p></div></div>
+        <div class="faq-item"><button class="faq-question">Do you offer a warranty on your work?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes. Every project is protected by two commitments: our <strong>3-Year White Glove Workmanship Guarantee</strong> and our <strong>30-Day Touch-Up Promise</strong>. The 3-Year Guarantee covers any defect in application, adhesion, or finish — we return and correct it at no cost to you, no conditions, no questions asked. The 30-Day Touch-Up Promise means we schedule a return visit within 30 days of completion, walk through the project with you, and handle any adjustments until every surface meets our White Glove standard. Additionally, the premium Sherwin-Williams and Benjamin Moore products we use carry their own manufacturer warranties for added peace of mind.</p></div></div>
         <div class="faq-item"><button class="faq-question">How quickly can you start?<span class="faq-icon">+</span></button><div class="faq-answer"><p>For urgent projects, we can often begin within 1-2 weeks. Standard scheduling is typically 2-4 weeks out. We'll confirm availability during your free consultation and work to accommodate your timeline.</p></div></div>
       </div>
     </div>
