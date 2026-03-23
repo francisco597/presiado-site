@@ -279,13 +279,10 @@
     .sms-consent-block{background:rgba(198,167,104,0.07);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:18px 20px;margin-bottom:24px}
     .sms-consent-row{display:flex;align-items:flex-start;gap:12px}
     .sms-consent-row input[type="checkbox"]{width:17px;height:17px;min-width:17px;margin-top:3px;accent-color:var(--gold);cursor:pointer}
-    .sms-consent-row input[type="checkbox"].invalid{outline:2px solid #ff6b6b;outline-offset:2px}
     .sms-consent-text{font-size:12.5px;line-height:1.7;color:var(--gray-400)}
     .sms-consent-text strong{color:var(--white)}
     .sms-consent-text a{color:var(--gold);text-decoration:underline}
     .sms-consent-note{font-size:11px;color:var(--gray-600);margin-top:10px;line-height:1.6;padding-left:29px}
-    #err-sms{display:none;font-size:11px;color:#ff8080;margin-top:6px;padding-left:29px}
-    #err-sms.visible{display:block}
   </style>
 </head>
 <body>
@@ -652,7 +649,6 @@
               </div>
             </div>
             <p class="sms-consent-note">Consent is not a condition of receiving our services. You may opt out at any time.</p>
-            <p id="err-sms">Please accept the SMS consent to continue.</p>
           </div>
           <!-- END SMS CONSENT BLOCK -->
 
@@ -763,19 +759,12 @@
           if(!f.check(el.value)){el.classList.add('invalid');valid=false;}
           else el.classList.remove('invalid');
         });
-        var smsBox=document.getElementById('f-sms-consent');
-        var smsErr=document.getElementById('err-sms');
-        if(!smsBox.checked){smsBox.classList.add('invalid');smsErr.classList.add('visible');valid=false;}
-        else{smsBox.classList.remove('invalid');smsErr.classList.remove('visible');}
         return valid;
       }
       ['f-name','f-phone','f-email','f-area','f-service'].forEach(function(id){
         var el=document.getElementById(id);
         el.addEventListener('blur',validate);
         el.addEventListener('input',function(){if(el.classList.contains('invalid'))validate()});
-      });
-      document.getElementById('f-sms-consent').addEventListener('change',function(){
-        if(this.checked){this.classList.remove('invalid');document.getElementById('err-sms').classList.remove('visible');}
       });
       form.addEventListener('submit',function(e){
         e.preventDefault();
