@@ -805,6 +805,11 @@
           </div>
           <!-- END SMS CONSENT BLOCK -->
 
+          <!-- HONEYPOT — anti-bot. Invisible to humans, bots fill it. If filled, submit is silently blocked. -->
+          <div class="hp-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+            <label for="hp-website">Website (leave this field blank)</label>
+            <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" value="">
+          </div>
           <button type="submit" id="submit-btn" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:18px 32px;font-size:16px;font-weight:700;font-family:var(--font-body);letter-spacing:.5px;border-radius:4px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;">
             <span id="btn-text">Request My Free Estimate →</span>
             <span id="btn-loading" style="display:none;">Sending...</span>
@@ -960,8 +965,19 @@
       // We do NOT call preventDefault when validation passes — the browser performs
       // the real POST into the hidden iframe using the form's action/method/target.
       form.addEventListener('submit',function(e){
+        // HONEYPOT — bots fill the hidden field, humans don't see it
+        var hp = document.getElementById('hp-website');
+        if (hp && hp.value.trim() !== '') {
+          e.preventDefault();
+          // Fake success so bot does not learn — show success state silently
+          if (typeof showSuccess === 'function') showSuccess();
+          return;
+        }
+        // Disable honeypot so Google Form does not receive an unknown field
+        if (hp) hp.disabled = true;
         if(!validate()){
           e.preventDefault();
+          if (hp) hp.disabled = false; // restore for retry
           return;
         }
         btn.disabled=true;

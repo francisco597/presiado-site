@@ -345,6 +345,11 @@
           </div>
           <div style="margin-bottom:18px;"><label class="fl" for="f-notes">Tell Us About Your Project</label><textarea class="fi" id="f-notes" name="notes" rows="4" placeholder="Number of rooms, approximate size, any special requirements..."></textarea></div>
           <div class="sms-block"><div class="sms-row"><input type="checkbox" id="f-sms-consent" name="sms_consent"><div class="sms-txt"><strong>SMS Communication Consent</strong> By checking this box, I agree to receive SMS text messages from Presiado Home Improvement LLC. Messages may include estimate follow-ups, project updates, and appointment reminders. Reply <strong>STOP</strong> to opt out. View our <a href="/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions" target="_blank">Terms &amp; Conditions</a>.</div></div><p class="sms-note">Consent is not a condition of receiving our services.</p></div>
+          <!-- HONEYPOT — anti-bot. Invisible to humans, bots fill it. If filled, submit is silently blocked. -->
+          <div class="hp-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+            <label for="hp-website">Website (leave this field blank)</label>
+            <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" value="">
+          </div>
           <button type="submit" id="sub-btn" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:17px 32px;font-size:16px;font-weight:700;font-family:var(--font-body);letter-spacing:.5px;border-radius:4px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;"><span id="btn-text">Request My Free Interior Painting Estimate &#8594;</span><span id="btn-loading" style="display:none;">Sending...</span></button>
           <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--gray-600);">&#128274; Your information is private and never shared. We respond within 60 minutes.</p>
         </form>
@@ -399,7 +404,18 @@
       }
       ['f-name','f-phone','f-email','f-area','f-service'].forEach(function(id){var el=document.getElementById(id);el.addEventListener('blur',validate);el.addEventListener('input',function(){if(el.classList.contains('invalid'))validate();});});
       form.addEventListener('submit',function(e){
-        e.preventDefault();if(!validate())return;
+        // HONEYPOT — bots fill the hidden field, humans don't see it
+        var hp = document.getElementById('hp-website');
+        if (hp && hp.value.trim() !== '') {
+          e.preventDefault();
+          // Fake success so bot does not learn — show success state silently
+          if (typeof showSuccess === 'function') showSuccess();
+          return;
+        }
+        // Disable honeypot so Google Form does not receive an unknown field
+        if (hp) hp.disabled = true;
+        e.preventDefault();
+        if(!validate()){ if (hp) hp.disabled = false; return; }
         btn.disabled=true;btnText.style.display='none';btnLoad.style.display='inline';error.style.display='none';
         fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('f-name').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),city:document.getElementById('f-area').value,service:document.getElementById('f-service').value,timeline:document.getElementById('f-timeline').value,notes:document.getElementById('f-notes').value.trim(),sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',source:'interior-painting-sarasota'})})
         .then(function(){form.style.display='none';success.style.display='block';success.scrollIntoView({behavior:'smooth',block:'center'});})
