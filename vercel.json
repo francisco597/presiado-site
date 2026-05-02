@@ -1,5 +1,12 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/drywall-contractor-sarasota",
+      "destination": "/drywall-finishing-sarasota",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
