@@ -404,6 +404,7 @@
     window.addEventListener('scroll',function(){document.getElementById('nav').style.boxShadow=window.scrollY>50?'0 4px 30px rgba(0,0,0,0.3)':'';});
     document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
     (function(){
+      try{var _u_init=new URLSearchParams(window.location.search);['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=_u_init.get(k);if(v)sessionStorage.setItem('px_'+k,v);});}catch(e){}
       var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxQV_TaFtlU_Ba9MOAOhCmN3cXQM5uEphU2Je1XhurM7PW7N4znAHsNftoogucL3juw/exec';
       var form=document.getElementById('estimate-form');
       var success=document.getElementById('form-success');
@@ -429,7 +430,7 @@
         e.preventDefault();
         if(!validate()){ if (hp) hp.disabled = false; return; }
         btn.disabled=true;btnText.style.display='none';btnLoad.style.display='inline';error.style.display='none';
-        fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('f-name').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),city:document.getElementById('f-area').value,service:document.getElementById('f-service').value,timeline:document.getElementById('f-timeline').value,notes:document.getElementById('f-notes').value.trim(),sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',source:'drywall-repair-painting-sarasota'})})
+        fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({name:document.getElementById('f-name').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),city:document.getElementById('f-area').value,service:document.getElementById('f-service').value,timeline:document.getElementById('f-timeline').value,notes:document.getElementById('f-notes').value.trim(),sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',source:'drywall-repair-painting-sarasota'},(function(){var u=new URLSearchParams(window.location.search);var keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];var utm={};var fresh=false;keys.forEach(function(k){var v=u.get(k);if(v){utm[k]=v;fresh=true;}else{utm[k]=sessionStorage.getItem('px_'+k)||'';}});if(fresh){try{keys.forEach(function(k){if(utm[k])sessionStorage.setItem('px_'+k,utm[k]);});}catch(e){}}return utm;})(),{landing_path:window.location.pathname,referrer:document.referrer||'direct'}))})
         .then(function(){form.style.display='none';success.style.display='block';success.scrollIntoView({behavior:'smooth',block:'center'});})
         .catch(function(){error.style.display='block';btn.disabled=false;btnText.style.display='inline';btnLoad.style.display='none';});
       });
