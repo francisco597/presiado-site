@@ -405,7 +405,7 @@
     <div class="container">
       <div class="fi-wrap">
         <div class="fb"><div class="logo">PRESIADO</div><p>Premium residential painting, drywall repair, and remodeling in Sarasota, Florida. Locally owned. Results guaranteed.</p></div>
-        <div class="fc"><h4>SERVICES</h4><a href="/interior-painting-sarasota">Interior Painting</a><a href="/exterior-painting-sarasota">Exterior Painting</a><a href="/drywall-repair-sarasota">Drywall Repair</a><a href="/#services">Trim &amp; Carpentry</a></div>
+        <div class="fc"><h4>SERVICES</h4><a href="/interior-painting-sarasota">Interior Painting</a><a href="/exterior-painting-sarasota">Exterior Painting</a><a href="/drywall-finishing-sarasota">Drywall Finishing (Level 5)</a><a href="/drywall-repair-sarasota">Drywall Repair</a><a href="/#services">Trim &amp; Carpentry</a></div>
         <div class="fc"><h4>CONTACT</h4><a href="tel:+19417043464">&#128222; (941) 704-3464</a><a href="mailto:francisco@presiadohomegroup.com">&#9993; francisco@presiadohomegroup.com</a><p>Sarasota, FL 34231</p><p>Mon &#8211; Sat: 7:00 AM &#8211; 6:00 PM</p></div>
         <div class="fc"><h4>GET STARTED</h4><a href="#estimate">Request Free Estimate</a><a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank">Schedule a Visit</a><a href="/">Back to Home</a></div>
       </div>
@@ -453,7 +453,7 @@
         if(!validate()){ if (hp) hp.disabled = false; return; }
         btn.disabled=true;btnText.style.display='none';btnLoad.style.display='inline';error.style.display='none';
         fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({name:document.getElementById('f-name').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),city:document.getElementById('f-area').value,service:document.getElementById('f-service').value,timeline:document.getElementById('f-timeline').value,notes:document.getElementById('f-notes').value.trim(),sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',source:'interior-painting-lakewood-ranch'},(function(){var u=new URLSearchParams(window.location.search);var keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];var utm={};var fresh=false;keys.forEach(function(k){var v=u.get(k);if(v){utm[k]=v;fresh=true;}else{utm[k]=sessionStorage.getItem('px_'+k)||'';}});if(fresh){try{keys.forEach(function(k){if(utm[k])sessionStorage.setItem('px_'+k,utm[k]);});}catch(e){}}return utm;})(),{landing_path:window.location.pathname,referrer:document.referrer||'direct'}))})
-        .then(function(){form.style.display='none';success.style.display='block';success.scrollIntoView({behavior:'smooth',block:'center'});})
+        .then(function(){form.style.display='none';success.style.display='block';success.scrollIntoView({behavior:'smooth',block:'center'});if(typeof gtag==='function'){gtag('event','lead_submit',{landing_path:window.location.pathname,service:document.getElementById('f-service').value,city:document.getElementById('f-area').value});}})
         .catch(function(){error.style.display='block';btn.disabled=false;btnText.style.display='inline';btnLoad.style.display='none';});
       });
     })();
