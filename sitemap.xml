@@ -9,6 +9,20 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Conversion Routes -->
+  <url>
+    <loc>https://presiadohomegroup.com/contact</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://presiadohomegroup.com/estimate</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Service Pages -->
   <url>
     <loc>https://presiadohomegroup.com/interior-painting-sarasota</loc>

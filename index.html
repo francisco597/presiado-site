@@ -217,6 +217,10 @@
     .service-card.is-secondary{background:rgba(28,28,28,0.6)}
     .service-card .secondary-tag{display:inline-block;font-family:var(--font-brand);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500}
     @media(max-width:768px){.services-grid{grid-template-columns:1fr}}
+    .port-home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .port-home-grid a{transition:transform .4s}.port-home-grid a:hover{transform:translateY(-4px)}
+    .port-home-grid img{transition:transform .5s}.port-home-grid a:hover img{transform:scale(1.04)}
+    @media(max-width:768px){.port-home-grid{grid-template-columns:1fr}}
     .coverage-section{position:relative;background:var(--black);padding:100px 0;overflow:hidden}
     .coverage-section .gold-stripe{height:100%}
     .coverage-intro{font-size:17px;color:var(--gray-400);max-width:640px;margin:0 auto 56px;text-align:center;line-height:1.7}
@@ -309,6 +313,7 @@
       <a href="#" class="nav-logo">PRESIADO<span>HOME IMPROVEMENT</span></a>
       <div class="nav-links">
         <a href="#services">Services</a>
+        <a href="#portfolio">Our Work</a>
         <a href="#coverage">Coverage</a>
         <a href="#areas">Service Area</a>
         <a href="#faq">FAQ</a>
@@ -329,8 +334,8 @@
         <p class="hero-sub">Interior painting, exterior painting, drywall repair, and Level 4&ndash;5 finishing for projects of any size &mdash; from single-room repairs to full-home repaints.</p>
         <p class="brand-promise">&ldquo;Clean process. Careful prep. Professional results.&rdquo;</p>
         <div class="hero-actions">
-          <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" class="btn-primary" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'hero'})">Request a Free Estimate</a>
-          <a href="/drywall-repair-sarasota" class="btn-text-link">Need a Small Repair? <span style="color:var(--gold);">&rarr;</span> Drywall Repair</a>
+          <a href="#request-estimate" class="btn-primary" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'hero'})">Request a Free Estimate</a>
+          <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" class="btn-text-link" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'hero_schedule'})">Schedule a Visit <span style="color:var(--gold);">&rarr;</span></a>
         </div>
         <div class="hero-trust">
           <p class="trust-line">Insured &middot; Written scopes &middot; Documented finish system &middot; 3-Year Limited Workmanship Warranty, subject to written terms.</p>
@@ -419,6 +424,45 @@
           <h3>Stucco Painting</h3>
           <p>Surface inspection, repair, and coating for stucco exteriors common to Sarasota homes.</p>
           <span class="more">Request a free estimate &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4B — RECENT WORK / PORTFOLIO -->
+  <section class="section section-cream" id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Recent Work</h2>
+        <p class="section-subtitle">Real homes across Sarasota and Manatee Counties &mdash; drywall, interior, and exterior projects finished to one clean standard.</p>
+      </div>
+      <div class="port-home-grid">
+        <a class="reveal" href="/drywall-repair-sarasota" style="position:relative;border-radius:8px;overflow:hidden;display:block;aspect-ratio:4/3;background:#1C1C1C;text-decoration:none;">
+          <img src="/images/interior-painting-sarasota-ceiling-portfolio-1200x900.webp" width="1200" height="900" loading="lazy" decoding="async" alt="Drywall repair and ceiling finishing in Sarasota, FL" style="width:100%;height:100%;object-fit:cover;">
+          <span style="position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(0,0,0,0.85));"></span>
+          <span style="position:absolute;bottom:0;left:0;right:0;padding:20px 18px 16px;">
+            <span style="display:inline-block;background:var(--gold);color:#0F0F0F;padding:3px 9px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:6px;">DRYWALL</span>
+            <span style="display:block;color:#FAFAFA;font-family:var(--font-display);font-size:16px;font-weight:600;">Drywall Repair &amp; Ceiling Finishing</span>
+            <span style="display:block;color:#C6A768;font-size:12px;margin-top:2px;">View drywall repair &rarr;</span>
+          </span>
+        </a>
+        <a class="reveal reveal-delay-1" href="/interior-painting-sarasota" style="position:relative;border-radius:8px;overflow:hidden;display:block;aspect-ratio:4/3;background:#1C1C1C;text-decoration:none;">
+          <img src="/images/interior-painting-sarasota-luxury-home-2025.webp" width="1400" height="1050" loading="lazy" decoding="async" alt="Interior painting in a Sarasota luxury home" style="width:100%;height:100%;object-fit:cover;">
+          <span style="position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(0,0,0,0.85));"></span>
+          <span style="position:absolute;bottom:0;left:0;right:0;padding:20px 18px 16px;">
+            <span style="display:inline-block;background:var(--gold);color:#0F0F0F;padding:3px 9px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:6px;">INTERIOR</span>
+            <span style="display:block;color:#FAFAFA;font-family:var(--font-display);font-size:16px;font-weight:600;">Whole-Home Interior Repaint</span>
+            <span style="display:block;color:#C6A768;font-size:12px;margin-top:2px;">View interior painting &rarr;</span>
+          </span>
+        </a>
+        <a class="reveal reveal-delay-2" href="/exterior-painting-sarasota" style="position:relative;border-radius:8px;overflow:hidden;display:block;aspect-ratio:4/3;background:#1C1C1C;text-decoration:none;">
+          <img src="/images/exterior-painting-sarasota-residential-home-2024.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Exterior painting of a residential home in Sarasota, FL" style="width:100%;height:100%;object-fit:cover;">
+          <span style="position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(0,0,0,0.85));"></span>
+          <span style="position:absolute;bottom:0;left:0;right:0;padding:20px 18px 16px;">
+            <span style="display:inline-block;background:var(--gold);color:#0F0F0F;padding:3px 9px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:6px;">EXTERIOR</span>
+            <span style="display:block;color:#FAFAFA;font-family:var(--font-display);font-size:16px;font-weight:600;">Exterior Repaint &amp; Trim</span>
+            <span style="display:block;color:#C6A768;font-size:12px;margin-top:2px;">View exterior painting &rarr;</span>
+          </span>
         </a>
       </div>
     </div>
@@ -521,7 +565,7 @@
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Prefer a written reply?</h2>
-        <p class="section-subtitle">Send us your project details and we&rsquo;ll follow up during business hours with a clear next step. Or skip the form and <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'form_section_alt'})">request a free estimate visit &rarr;</a></p>
+        <p class="section-subtitle">Send us your project details and we&rsquo;ll follow up during business hours with a clear next step. Or skip the form and <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'form_section_alt'})">schedule a visit instead &rarr;</a></p>
       </div>
       <div style="max-width:680px;margin:0 auto;">
         <div id="form-success" style="display:none;background:rgba(198,167,104,0.1);border:1px solid var(--gold);border-radius:6px;padding:40px;text-align:center;">
@@ -637,7 +681,7 @@
       <h2>Ready to start?</h2>
       <p class="closing-body">Request a written estimate for painting, drywall, or finish work in Sarasota and surrounding communities. Site visit, scope, and pricing clearly documented before any work begins.</p>
       <div class="closing-actions">
-        <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" class="btn-primary" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'closing'})">Request a Free Estimate</a>
+        <a href="#request-estimate" class="btn-primary" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'closing'})">Request a Free Estimate</a>
       </div>
       <p style="margin-bottom:28px;"><a href="tel:+19417043464" class="closing-phone" onclick="if(typeof gtag==='function')gtag('event','phone_click',{location:'closing'})">Or call (941) 704-3464</a></p>
       <p class="trust-line">Insured &middot; Written scopes &middot; Documented finish system &middot; 3-Year Limited Workmanship Warranty, subject to written terms.</p>
@@ -675,8 +719,9 @@
         </div>
         <div class="footer-col">
           <h4>Get Started</h4>
-          <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'footer'})">Request a Free Estimate</a>
-          <a href="#request-estimate">Send Project Details</a>
+          <a href="#request-estimate" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'footer'})">Request a Free Estimate</a>
+          <a href="/contact">Contact Us</a>
+          <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'footer_schedule'})">Schedule a Visit</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -690,7 +735,7 @@
   </footer>
 
   <div class="mobile-cta" id="mobileCta">
-    <a href="https://calendar.app.google/9pCFGjBpfp642DmNA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'mobile_sticky'})">Request a Free Estimate</a>
+    <a href="#request-estimate" onclick="if(typeof gtag==='function')gtag('event','estimate_click',{location:'mobile_sticky'})">Request a Free Estimate</a>
   </div>
 
   <script>
