@@ -76,6 +76,43 @@
     .ft a{color:var(--gray-400);text-decoration:none}
     .ft a:hover{color:var(--gold)}
     @media(max-width:420px){.logo{max-width:240px}.tagline{font-size:18px}.lk-tt{font-size:14px}}
+    /* ---- MOTION ---- */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInLogo{from{opacity:0;transform:translateY(-10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes ruleGrow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+    @keyframes sheen{0%{left:-60%}22%{left:135%}100%{left:135%}}
+    @keyframes glowPulse{0%,100%{opacity:1}50%{opacity:.8}}
+    @keyframes arrowNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+    .bg{animation:glowPulse 8s ease-in-out infinite}
+    .logo{opacity:0;animation:fadeInLogo .8s cubic-bezier(.2,.7,.3,1) .05s forwards}
+    .rule{opacity:0;transform-origin:center;animation:ruleGrow .7s cubic-bezier(.2,.7,.3,1) .3s forwards}
+    .tagline{opacity:0;animation:fadeUp .6s cubic-bezier(.2,.7,.3,1) .42s forwards}
+    .subline{opacity:0;animation:fadeUp .6s cubic-bezier(.2,.7,.3,1) .52s forwards}
+    .trust{opacity:0;animation:fadeUp .6s cubic-bezier(.2,.7,.3,1) .62s forwards}
+    .links>*{opacity:0;animation:fadeUp .55s cubic-bezier(.2,.7,.3,1) forwards}
+    .links>*:nth-child(1){animation-delay:.72s}
+    .links>*:nth-child(2){animation-delay:.80s}
+    .links>*:nth-child(3){animation-delay:.88s}
+    .links>*:nth-child(4){animation-delay:.96s}
+    .links>*:nth-child(5){animation-delay:1.04s}
+    .links>*:nth-child(6){animation-delay:1.12s}
+    .links>*:nth-child(7){animation-delay:1.20s}
+    .links>*:nth-child(8){animation-delay:1.28s}
+    .links>*:nth-child(9){animation-delay:1.36s}
+    .links>*:nth-child(10){animation-delay:1.44s}
+    .social{opacity:0;animation:fadeUp .6s cubic-bezier(.2,.7,.3,1) 1.55s forwards}
+    .ft{opacity:0;animation:fadeUp .6s cubic-bezier(.2,.7,.3,1) 1.65s forwards}
+    /* entrance fill sets transform:none; keep hover lift working */
+    .lk:hover,.lk:active{transform:translateY(-2px)!important}
+    /* subtle light sweep across the primary CTA */
+    .lk-primary::after{content:'';position:absolute;top:0;left:-60%;width:38%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.28),transparent);transform:skewX(-18deg);animation:sheen 5s ease-in-out 2.2s infinite;pointer-events:none}
+    /* gentle hint nudge on the primary arrow */
+    .lk-primary .lk-ar{animation:arrowNudge 2.6s ease-in-out 2.4s infinite}
+    .lk-primary:hover .lk-ar{animation:none}
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important}
+      .logo,.rule,.tagline,.subline,.trust,.links>*,.social,.ft{opacity:1!important;transform:none!important}
+    }
   </style>
 </head>
 <body>
