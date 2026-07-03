@@ -493,5 +493,24 @@
       });
     })();
   </script>
+  <!-- px-lead-tracking v1 — auto-attach lead events (phone/email/schedule) a enlaces sin tracking inline; NO duplica los inline -->
+  <script>
+  (function(){
+    function loc(a){
+      if(a.closest('footer'))return'footer';
+      if(a.closest('nav')||a.closest('header'))return'nav';
+      var s=a.closest('[id]');return(s&&s.id)?s.id:'inpage';
+    }
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;
+      if(!a||typeof gtag!=='function')return;
+      if(/gtag\(/.test(a.getAttribute('onclick')||''))return;
+      var h=a.getAttribute('href')||'';
+      if(h.indexOf('tel:')===0)gtag('event','phone_click',{location:loc(a)});
+      else if(h.indexOf('mailto:')===0)gtag('event','email_click',{location:loc(a)});
+      else if(h.indexOf('calendar.app.google')>-1)gtag('event','estimate_click',{location:loc(a)+'_schedule'});
+    },true);
+  })();
+  </script>
 </body>
 </html>
