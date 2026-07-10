@@ -831,11 +831,11 @@
         el.addEventListener('input',function(){if(el.classList.contains('invalid'))validate();});
       });
 
-      function showSuccess(){
+      function showSuccess(fireConv){
         form.style.display='none';
         success.style.display='block';
         success.scrollIntoView({behavior:'smooth',block:'center'});
-        if(typeof gtag==='function'){
+        if(fireConv!==false&&typeof gtag==='function'){
           gtag('event','form_submit',{
             landing_path:window.location.pathname,
             service:document.getElementById('f-service').value,
@@ -856,7 +856,7 @@
         var hp=document.getElementById('hp-website');
         if(hp && hp.value.trim()!==''){
           e.preventDefault();
-          showSuccess();
+          showSuccess(false);
           return;
         }
         if(hp)hp.disabled=true;
