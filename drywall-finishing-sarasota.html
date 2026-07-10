@@ -473,9 +473,9 @@
         return valid;
       }
       ['f-name','f-phone','f-email','f-area','f-service'].forEach(function(id){var el=document.getElementById(id);el.addEventListener('blur',validate);el.addEventListener('input',function(){if(el.classList.contains('invalid'))validate();});});
-      function showSuccess(){
+      function showSuccess(fireConv){
         form.style.display='none';success.style.display='block';success.scrollIntoView({behavior:'smooth',block:'center'});
-        if(typeof gtag==='function'){
+        if(fireConv!==false&&typeof gtag==='function'){
           gtag('event','form_submit',{landing_path:window.location.pathname,service:document.getElementById('f-service').value,city:document.getElementById('f-area').value});
           gtag('event','conversion',{send_to:'AW-17985883107/ia0-COWe5qkcEOOXq4BD'});
         }
@@ -483,7 +483,7 @@
       form.addEventListener('submit',function(e){
         e.preventDefault();
         var hp=document.getElementById('hp-website');
-        if(hp && hp.value.trim()!==''){showSuccess();return;}
+        if(hp && hp.value.trim()!==''){showSuccess(false);return;}
         if(hp)hp.disabled=true;
         if(!validate()){if(hp)hp.disabled=false;return;}
         btn.disabled=true;btnText.style.display='none';btnLoad.style.display='inline';error.style.display='none';
