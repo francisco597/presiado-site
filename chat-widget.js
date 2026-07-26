@@ -42,8 +42,122 @@
     'palmer-ranch': 'Palmer Ranch', 'sarasota': 'Sarasota'
   });
 
-  var A = { service: PRE_SERVICE, city: PRE_CITY, timeline: '', name: '', phone: '', email: '', notes: '', sms: false };
-  var step = 0, sent = false;
+  var A = { service: PRE_SERVICE, city: PRE_CITY, timeline: '', name: '', phone: '', email: '', notes: '', sms: false, ask: '' };
+  var step = 0, sent = false, asked = {}, freeAsk = false, started = false;
+
+  /* =====================================================================
+     BANCO DE RESPUESTAS  ("Antes de dejar mis datos, quiero saber…")
+     ---------------------------------------------------------------------
+     Regla: el chat NO improvisa. Cada respuesta sale de doctrina escrita:
+       · el FAQ ya publicado en las páginas de servicio (mismo copy que
+         Google ya indexó y que el visitante acaba de leer más arriba), y
+       · Brand Guide §5.4 para la garantía — WORD-FOR-WORD, nunca parafrasear.
+     Compliance: solo "Insured". NUNCA "licensed", "GC", "License #".
+     Si la pregunta no está en este banco, no se adivina: se captura como
+     lead con la pregunta escrita y la contesta Francisco.
+     ===================================================================== */
+
+  var FREE_EST = ' Every estimate is itemized after a free on-site visit, so you see exactly what you are paying for.';
+
+  var COST = {
+    'Interior Painting': 'Interior painting in Sarasota typically runs <b>$2.80&ndash;$6.50 per sq ft</b>. A single bedroom usually lands $350&ndash;$650; a full 3&ndash;4 bedroom home $4,500&ndash;$9,000, including premium paint, prep and priming.',
+    'Exterior Painting': 'Exterior painting typically runs <b>$1.50&ndash;$4.50 per sq ft</b> of paintable surface. A 2,000 sq ft home usually lands $3,500&ndash;$7,000. Surface condition, number of stories and stucco vs siding move the number.',
+    'Cabinet Painting': 'Cabinet painting typically runs <b>$2,500&ndash;$6,500</b>. A standard kitchen of 30&ndash;40 doors usually lands $3,500&ndash;$5,500 with full prep, primer and two finish coats.',
+    'Popcorn / Ceiling Removal': 'Popcorn removal with a smooth refinish runs <b>$500&ndash;$1,500 per room</b>. Small ceiling patches run $200&ndash;$450, and larger repairs or water-stain refinishing $450&ndash;$1,200.',
+    'Water Damage Repair': 'A contained water-stain refinish typically runs <b>$250&ndash;$600</b>. Cutting out and replacing a failed drywall section with texture match and paint runs $600&ndash;$1,800. Larger areas run higher.',
+    'Drywall Repair': 'A single room with light drywall repair plus painting typically runs <b>$1,200&ndash;$2,800</b>. Bigger scopes &mdash; water damage, popcorn removal, a full skim coat plus repaint &mdash; run $3,000&ndash;$8,000+.',
+    'Drywall Finishing (Level 4/5)': 'A single room with drywall work plus painting typically runs <b>$1,200&ndash;$2,800</b>. Full-room skim coating to a Level 5 finish plus repaint runs $3,000&ndash;$8,000+, depending on square footage and wall condition.',
+    _: 'It depends on the scope. As reference points: a small ceiling or drywall patch starts around $200&ndash;$450, interior painting runs $2.80&ndash;$6.50 per sq ft, and a kitchen cabinet repaint $2,500&ndash;$6,500.'
+  };
+
+  var TIME = {
+    'Interior Painting': 'A single room takes 1&ndash;2 days. A full 3&ndash;4 bedroom interior usually takes 4&ndash;7 days. Your proposal commits to a specific timeline in writing before work begins.',
+    'Cabinet Painting': '3&ndash;5 business days. We remove every door and drawer front, prep and sand, apply primer and finish coats in a controlled environment, then reinstall. Kitchen access is limited while we work.',
+    'Popcorn / Ceiling Removal': 'Small patches and stain refinishing take 1&ndash;2 days including drying time. Popcorn removal with a smooth refinish takes 2&ndash;4 days per room. Water damage with replacement runs 3&ndash;5 days.',
+    'Water Damage Repair': 'A contained stain refinish takes 1&ndash;2 days including drying time. Cut out, replace, texture-match and paint runs 2&ndash;4 days. Multiple damaged areas run longer.',
+    'Drywall Repair': 'A single-room repair with paint is usually 1&ndash;3 days. Bigger scopes &mdash; water damage, popcorn removal, a full skim coat &mdash; run 3&ndash;5 days including drying time.',
+    'Drywall Finishing (Level 4/5)': 'A single-room finish with paint is usually 1&ndash;3 days. A full skim coat to Level 5 across a room runs 3&ndash;5 days including drying and sanding time.',
+    _: 'It depends on the size and condition of the space &mdash; most single-room projects are days, not weeks. Either way, your proposal commits to a specific timeline in writing before work begins.'
+  };
+
+  var WARRANTY =
+    'Every project is backed by <b>Presiado Complete Coverage</b>:<br>' +
+    '&bull; 3-Year Limited Workmanship Warranty (subject to written project agreement)<br>' +
+    '&bull; Manufacturer Paint Warranty (up to 25 yrs)<br>' +
+    '&bull; 30-Day Complimentary Touch-Up<br>' +
+    '&bull; Lifetime Color Documentation<br>' +
+    'If a workmanship defect shows up within those 3 years, we come back and correct it at no cost to you.';
+
+  // Preguntas específicas por servicio (solo aparecen donde aplican).
+  var EXTRAS = {
+    'Interior Painting': [
+      { k: 'protect', q: 'Do you protect my furniture and floors?',
+        a: 'Completely. All furniture, fixtures and flooring are covered before any work begins, and we clean up at the end of every day so the house stays livable while we work.' }
+    ],
+    'Exterior Painting': [
+      { k: 'hoa', q: 'Can you match my HOA colors?',
+        a: 'Yes. We work directly from HOA-approved palettes and match approved colors precisely &mdash; we do it regularly in Longboat Key, Lakewood Ranch, Palmer Ranch and Siesta Key.' },
+      { k: 'stucco', q: 'Do you paint stucco?',
+        a: 'Stucco is our specialty in this market. We prepare, prime and paint it with Florida-rated coatings chosen to bridge hairline cracks and resist moisture.' }
+    ],
+    'Cabinet Painting': [
+      { k: 'worth', q: 'Is painting better than replacing?',
+        a: 'In most cases yes. Painting delivers the full kitchen transformation at 20&ndash;30% of the cost of replacement &mdash; homeowners here typically save $12,000&ndash;$30,000 &mdash; with a sprayed, factory-quality finish.' }
+    ],
+    'Popcorn / Ceiling Removal': [
+      { k: 'asbestos', q: 'What about asbestos testing?',
+        a: 'Florida requires asbestos testing before popcorn removal on homes built before 1980. We arrange the test through a certified lab and only proceed once the results are clear. Homes built 1980 or later typically do not need it.' },
+      { k: 'match', q: 'Will the repair match my ceiling?',
+        a: 'That is the real test of a ceiling job &mdash; raking light shows every transition. We test the texture on a small area first, dial in the match (Knockdown, Orange Peel or Smooth/Level 5), and confirm it before finishing.' }
+    ],
+    'Water Damage Repair': [
+      { k: 'leak', q: 'Do you fix the leak itself?',
+        a: 'No. We are a drywall, texture and paint company &mdash; not a plumber or roofer. We repair and refinish the ceiling once the water source has been stopped. If it has not been found yet, we tell you what we see and point you to the right trade first.' },
+      { k: 'claim', q: 'Will my insurance cover this?',
+        a: 'It often does when the damage is sudden and accidental, like a burst pipe or a storm-driven leak. We provide itemized documentation and photos for your adjuster. You file the claim, and coverage is decided by your carrier and policy, not by us.' }
+    ],
+    'Drywall Finishing (Level 4/5)': [
+      { k: 'level', q: 'Level 4 or Level 5 &mdash; which do I need?',
+        a: 'Level 4 is the standard finish: joints, fasteners and beads taped, coated and sanded. Level 5 adds a full skim coat across the entire surface &mdash; the right call under strong light, with dark colors, or with satin and gloss sheens.' }
+    ],
+    'Drywall Repair': [
+      { k: 'texture', q: 'Can you match my existing texture?',
+        a: 'Yes. We match Knockdown, Orange Peel and Smooth/Level 5 by hand on a small test area first, confirm the match with you, then sequence into primer and finish coats so the patch disappears.' }
+    ]
+  };
+
+  // Núcleo, disponible en todas las páginas. Orden = orden en el menú.
+  var CORE = [
+    { k: 'cost', q: 'What will this cost?', a: function () { return (COST[A.service] || COST._) + FREE_EST; } },
+    { k: 'start', q: 'How soon can you start?',
+      a: 'We usually get out to see the project within a few days of your call, and your proposal comes back with a specific start date and timeline in writing. If you are working against a deadline, tell us &mdash; we will say honestly whether we can meet it before you commit to anything.' },
+    { k: 'time', q: 'How long does the work take?', a: function () { return TIME[A.service] || TIME._; } },
+    { k: 'warranty', q: 'What does your warranty cover?', a: WARRANTY },
+    { k: 'insured', q: 'Are you insured?',
+      a: 'Yes. Presiado Home Improvement LLC is a registered Florida LLC carrying general liability insurance and workers&rsquo; compensation coverage. Documentation is included with every written proposal.' },
+    { k: 'estimate', q: 'What happens at the estimate?',
+      a: 'It is free and there is no pressure. We walk the space with you, take measurements and photos, and send back one itemized written proposal &mdash; scope, products, timeline and price &mdash; so you can compare it against anything else you are looking at.' },
+    { k: 'paint', q: 'What products do you use?',
+      a: 'Sherwin-Williams and Benjamin Moore only &mdash; Emerald, Duration, SuperPaint and Regal Select, plus Emerald Urethane Trim Enamel on cabinets. They carry their own manufacturer warranty on the coating system.' },
+    { k: 'both', q: 'Do you do drywall and painting together?',
+      a: 'That is our core: drywall and painting done as one system, not two problems. One proposal, one crew, one inspection at the end &mdash; nobody pointing fingers over the seam that shows up after primer.' },
+    { k: 'pay', q: 'How does payment work?',
+      a: 'Projects are scheduled with a deposit and the balance at completion; longer projects are split into milestones. The exact schedule is written into your proposal and agreement before any work starts &mdash; no surprises, nothing due for the estimate.' },
+    { k: 'area', q: 'Do you work in my area?',
+      a: 'Sarasota and everything around it &mdash; Longboat Key, Siesta Key, Bird Key, Lakewood Ranch, Palmer Ranch, Bradenton, Venice, Nokomis and Osprey. Distance does not change our pricing or our standards.' }
+  ];
+
+  function faqAll() {
+    var out = [], ex = EXTRAS[A.service] || [], i;
+    for (i = 0; i < CORE.length; i++) {
+      out.push(CORE[i]);
+      if (i === 2) { for (var j = 0; j < ex.length; j++) out.push(ex[j]); } // extras tras las 3 primeras
+    }
+    return out;
+  }
+  function faqPending() {
+    return faqAll().filter(function (f) { return !asked[f.k]; });
+  }
 
   function ev(name, params) { if (typeof gtag === 'function') { try { gtag('event', name, params || {}); } catch (e) {} } }
   function utm() {
@@ -82,6 +196,8 @@
 .pxc-ft{padding:8px 15px;background:#fff;border-top:1px solid #eee;font-size:11px;color:#8a8377;text-align:center}\
 .pxc-ft a{color:#C6A768;text-decoration:none;font-weight:500}\
 .pxc-err{color:#a32d2d;font-size:12.5px;margin-top:6px}\
+.pxc-ask{display:block;background:none;border:0;padding:2px 0 6px;margin:0;font-family:inherit;font-size:12.5px;color:#8a7a52;text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}\
+.pxc-ask:hover{color:#1C1C1C}\
 .pxc-hp{position:absolute;left:-9999px;width:1px;height:1px}\
 @media(max-width:420px){.pxc-panel{right:8px;left:8px;bottom:8px;width:auto}.pxc-fab{right:12px;bottom:12px}}';
 
@@ -143,13 +259,66 @@
   }
   function options(list, cb) {
     var w = document.createElement('div'); w.className = 'pxc-opts';
-    list.forEach(function (o) {
+    list.forEach(function (o, i) {
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'pxc-opt'; b.textContent = o;
-      b.addEventListener('click', function () { w.remove(); say(esc(o), true); cb(o); });
+      b.addEventListener('click', function () {
+        var link = w.parentNode && w.parentNode.querySelector('.pxc-ask');
+        if (link) link.remove();
+        w.remove(); say(esc(o), true); cb(o, i);
+      });
       w.appendChild(b);
     });
     body().appendChild(w); body().scrollTop = body().scrollHeight;
+  }
+
+  /* ---------- banco de respuestas: mecánica ---------- */
+  function val(id) { var e = document.getElementById(id); return e ? (e.value || '').trim() : ''; }
+  function stash() {                       // no perder lo tecleado al ir al banco
+    if (!document.getElementById('pxcN')) return;
+    A.name = val('pxcN'); A.phone = val('pxcP'); A.email = val('pxcE');
+    A.notes = val('pxcD'); A.ask = val('pxcQ') || A.ask;
+    var s = document.getElementById('pxcS'); A.sms = !!(s && s.checked);
+  }
+  function clearPending() {                 // quita opciones/formulario abiertos
+    stash();
+    var b = body(), n = b.querySelectorAll('.pxc-opts, .pxc-form, .pxc-ask'), i;
+    for (i = 0; i < n.length; i++) n[i].remove();
+  }
+  function askLink(label) {
+    if (!faqPending().length) return;
+    var a = document.createElement('button');
+    a.type = 'button'; a.className = 'pxc-ask';
+    a.textContent = label || 'Before I share my info, I have a question →';
+    a.addEventListener('click', function () { clearPending(); faqMenu(); });
+    body().appendChild(a); body().scrollTop = body().scrollHeight;
+  }
+  function faqMenu(intro) {
+    var list = faqPending().slice(0, 7);
+    say(intro || 'Of course — what would you like to know?');
+    var labels = list.map(function (f) { return f.q.replace(/&mdash;/g, '—'); });
+    labels.push('Something else');
+    options(labels, function (sel, idx) {
+      if (idx === list.length) {            // "Something else" -> lo contesta Francisco
+        freeAsk = true;
+        ev('chat_faq', { question: 'other', landing_path: location.pathname });
+        say('Ask away. Type your question below with your details and Francisco will answer you personally — usually the same day.');
+        step = 3; return render();
+      }
+      answer(list[idx]);
+    });
+  }
+  function answer(f) {
+    asked[f.k] = 1;
+    ev('chat_faq', { question: f.k, service: A.service, landing_path: location.pathname });
+    say(typeof f.a === 'function' ? f.a() : f.a);
+    var more = faqPending().length;
+    var opts = ['Got it — let\'s continue'];
+    if (more) opts.push('I have another question');
+    options(opts, function (sel, idx) {
+      if (idx === 1) return faqMenu('Sure — what else?');
+      render();                             // retoma el paso donde se quedó
+    });
   }
 
   /* ---------- flujo ---------- */
@@ -157,42 +326,45 @@
     if (step === 0) {
       say('Hi — thanks for stopping by. What can we help you with?');
       if (A.service) { say(esc(A.service), true); step = 1; return render(); }
-      return options(SERVICES, function (v) { A.service = v; step = 1; render(); });
+      options(SERVICES, function (v) { A.service = v; step = 1; render(); });
+      return askLink();
     }
     if (step === 1) {
       say('Where is the project located?');
       if (A.city) { say(esc(A.city), true); step = 2; return render(); }
-      return options(CITIES, function (v) { A.city = v; step = 2; render(); });
+      options(CITIES, function (v) { A.city = v; step = 2; render(); });
+      return askLink();
     }
     if (step === 2) {
       say('When would you like the work done?');
-      return options(TIMELINES, function (v) { A.timeline = v; step = 3; render(); });
+      options(TIMELINES, function (v) { A.timeline = v; step = 3; render(); });
+      return askLink();
     }
     if (step === 3) {
-      ev('chat_start', { service: A.service, city: A.city });
-      say('Perfect. Leave your details and Francisco will follow up personally — usually the same day.');
+      // una sola vez: volver del banco de respuestas re-renderiza este paso.
+      if (!started) { started = true; ev('chat_start', { service: A.service, city: A.city }); }
+      say(freeAsk ? 'Leave your question and your details below.'
+                  : 'Perfect. Leave your details and Francisco will follow up personally — usually the same day.');
       var f = document.createElement('div');
+      f.className = 'pxc-form';
       f.innerHTML =
-        '<div class="pxc-f"><input id="pxcN" type="text" placeholder="Your name" autocomplete="name"></div>' +
-        '<div class="pxc-f"><input id="pxcP" type="tel" placeholder="Phone" autocomplete="tel" inputmode="tel"></div>' +
-        '<div class="pxc-f"><input id="pxcE" type="email" placeholder="Email (optional)" autocomplete="email"></div>' +
-        '<div class="pxc-f"><input id="pxcD" type="text" placeholder="Anything we should know? (optional)"></div>' +
+        (freeAsk ? '<div class="pxc-f"><input id="pxcQ" type="text" placeholder="Your question" value="' + esc(A.ask) + '"></div>' : '') +
+        '<div class="pxc-f"><input id="pxcN" type="text" placeholder="Your name" autocomplete="name" value="' + esc(A.name) + '"></div>' +
+        '<div class="pxc-f"><input id="pxcP" type="tel" placeholder="Phone" autocomplete="tel" inputmode="tel" value="' + esc(A.phone) + '"></div>' +
+        '<div class="pxc-f"><input id="pxcE" type="email" placeholder="Email (optional)" autocomplete="email" value="' + esc(A.email) + '"></div>' +
+        '<div class="pxc-f"><input id="pxcD" type="text" placeholder="Anything we should know? (optional)" value="' + esc(A.notes) + '"></div>' +
         '<input class="pxc-hp" id="pxcHP" tabindex="-1" autocomplete="off" placeholder="Leave blank">' +
-        '<label class="pxc-sms"><input type="checkbox" id="pxcS"><span>It\'s OK to text me about this project.</span></label>' +
+        '<label class="pxc-sms"><input type="checkbox" id="pxcS"' + (A.sms ? ' checked' : '') + '><span>It\'s OK to text me about this project.</span></label>' +
         '<button type="button" class="pxc-go" id="pxcGo">Send &rarr;</button><div class="pxc-err" id="pxcErr"></div>';
       body().appendChild(f); body().scrollTop = body().scrollHeight;
       document.getElementById('pxcGo').addEventListener('click', submit);
-      return;
+      return askLink('Actually, I have a question first →');
     }
   }
 
   function submit() {
     var err = document.getElementById('pxcErr'), btn = document.getElementById('pxcGo');
-    A.name = (document.getElementById('pxcN').value || '').trim();
-    A.phone = (document.getElementById('pxcP').value || '').trim();
-    A.email = (document.getElementById('pxcE').value || '').trim();
-    A.notes = (document.getElementById('pxcD').value || '').trim();
-    A.sms = document.getElementById('pxcS').checked;
+    stash();
     if (document.getElementById('pxcHP').value) return;           // honeypot
     if (!A.name) { err.textContent = 'Please add your name.'; return; }
     if (A.phone.replace(/\D/g, '').length < 10 && !A.email) {
@@ -200,10 +372,15 @@
     }
     err.textContent = ''; btn.disabled = true; btn.textContent = 'Sending…';
 
+    // Las preguntas que hizo van en las notas: son la señal que decide, a los
+    // 30 días, si el banco guiado alcanza o hace falta otra cosa.
+    var qs = Object.keys(asked);
     var payload = Object.assign({
       name: A.name, phone: A.phone, email: A.email, city: A.city, service: A.service,
       timeline: A.timeline, referral_source: 'Website chat',
-      notes: (A.notes ? A.notes + ' — ' : '') + 'Captured by website chat (' + A.service + ', ' + A.city + ', ' + A.timeline + ')',
+      notes: (A.ask ? 'QUESTION: ' + A.ask + ' — ' : '') + (A.notes ? A.notes + ' — ' : '') +
+             'Captured by website chat (' + A.service + ', ' + A.city + ', ' + A.timeline + ')' +
+             (qs.length ? ' — asked about: ' + qs.join(', ') : ''),
       sms_consent: A.sms ? 'Yes' : 'No', source: 'chat-widget'
     }, utm(), { landing_path: location.pathname, referrer: document.referrer || 'direct' });
 
@@ -215,10 +392,13 @@
 
   function done() {
     if (sent) return; sent = true;
-    ev('chat_lead', { service: A.service, city: A.city, timeline: A.timeline, landing_path: location.pathname });
+    ev('chat_lead', { service: A.service, city: A.city, timeline: A.timeline,
+                      faq_count: Object.keys(asked).length, landing_path: location.pathname });
     ev('conversion', { send_to: ADS_CONV });
     body().innerHTML = '';
-    say('Thank you, ' + esc(A.name.split(' ')[0]) + '. Your request is in — Francisco will reach out shortly.' +
+    say('Thank you, ' + esc(A.name.split(' ')[0]) + '. ' +
+        (A.ask ? 'Francisco will answer your question personally, usually the same day.'
+               : 'Your request is in — Francisco will reach out shortly.') +
         '<br><br>Need it sooner? Call <a href="tel:' + TEL + '" style="color:#C6A768;font-weight:500">' + PHONE + '</a>.');
     setTimeout(function () { if (panel) close(); }, 9000);
   }
