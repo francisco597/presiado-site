@@ -478,6 +478,7 @@
       if(h.indexOf('tel:')===0)gtag('event','phone_click',{location:loc(a)});
       else if(h.indexOf('mailto:')===0)gtag('event','email_click',{location:loc(a)});
       else if(h.indexOf('calendar.app.google')>-1)gtag('event','estimate_click',{location:loc(a)+'_schedule'});
+      else if(h.indexOf('g.page/r/')>-1)gtag('event','review_click',{location:loc(a)});
     },true);
   })();
   </script>
