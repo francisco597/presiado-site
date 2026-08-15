@@ -5,6 +5,11 @@
       "source": "/drywall-contractor-sarasota",
       "destination": "/drywall-finishing-sarasota",
       "permanent": true
+    },
+    {
+      "source": "/water-damage-ceiling-repair-sarasota",
+      "destination": "/ceiling-repair-sarasota",
+      "permanent": true
     }
   ],
   "headers": [
