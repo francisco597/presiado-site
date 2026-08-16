@@ -863,6 +863,7 @@
         if(!validate()){
           e.preventDefault();
           if(hp)hp.disabled=false;
+          var _bad=document.querySelector('.invalid');if(_bad){_bad.scrollIntoView({behavior:'smooth',block:'center'});_bad.focus();}
           return;
         }
         btn.disabled=true;
