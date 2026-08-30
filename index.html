@@ -581,12 +581,7 @@
         <div id="form-error" style="display:none;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.3);border-radius:6px;padding:18px;text-align:center;margin-bottom:20px;">
           <p style="color:#ff8080;font-size:14px;">Something went wrong. Please call <a href="tel:+19417043464" style="color:var(--gold);" onclick="if(typeof gtag==='function')gtag('event','phone_click',{location:'form_error'})">(941) 704-3464</a> or try again.</p>
         </div>
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" title="Form response capture"></iframe>
-        <form id="estimate-form"
-              action="https://docs.google.com/forms/d/e/1FAIpQLScKVcG5h-39GBqlCnOeJFlXCU0k66ghxSI9Zk0NWMk4g3OGZA/formResponse"
-              method="POST"
-              target="hidden_iframe"
-              novalidate="">
+        <form id="estimate-form" novalidate="">
           <div class="form-row-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div class="field-group">
               <label class="field-label" for="f-name">Full Name <span style="color:var(--gold)">*</span></label>
@@ -650,11 +645,7 @@
             <label class="field-label" for="f-notes">Tell us about your project</label>
             <textarea class="field-input" id="f-notes" name="entry.1386197639" rows="4" placeholder="Describe the project: number of rooms, approximate size, any special requirements..."></textarea>
           </div>
-          <!--
-            SMS CONSENT BLOCK
-            NOTE: This checkbox is currently VISUAL-ONLY. The Google Form linked above
-            does not yet have a matching entry.xxxxx field for SMS consent.
-          -->
+          <!-- SMS CONSENT BLOCK — enviado al CRM como sms_consent (webhook, 2026-08-30) -->
           <div class="sms-consent-block">
             <div class="sms-consent-row">
               <input type="checkbox" id="f-sms-consent">
@@ -796,16 +787,16 @@
       },{passive:true});
     })();
 
-    // Form handler — Google Forms hidden-iframe flow
+    // Form handler — webhook al CRM (mismo patron que estimate.html; migrado 2026-08-30.
+    // El Google Form del home no arrastraba UTM/referrer: 2 de 8 WON entraron sin atribucion.)
     (function(){
+      var SCRIPT_URL='https://script.google.com/macros/s/AKfycbzCFaPtLfmxokcVKlbFXNllIX1AmZo5NR6nl-9ZpR7UjzHBlks-Atz7Wbt6xLdA4LaPLQ/exec';
       var form=document.getElementById('estimate-form');
-      var iframe=document.getElementById('hidden_iframe');
       var success=document.getElementById('form-success');
       var error=document.getElementById('form-error');
       var btn=document.getElementById('submit-btn');
       var btnText=document.getElementById('btn-text');
       var btnLoad=document.getElementById('btn-loading');
-      var submitted=false;
 
       var FIELDS=[
         {id:'f-name',check:function(v){return v.trim().length>1}},
@@ -853,40 +844,39 @@
       }
 
       form.addEventListener('submit',function(e){
+        e.preventDefault();
         var hp=document.getElementById('hp-website');
-        if(hp && hp.value.trim()!==''){
-          e.preventDefault();
-          showSuccess(false);
-          return;
-        }
-        if(hp)hp.disabled=true;
+        if(hp && hp.value.trim()!==''){showSuccess(false);return;}
         if(!validate()){
-          e.preventDefault();
-          if(hp)hp.disabled=false;
-          var _bad=document.querySelector('.invalid');if(_bad){_bad.scrollIntoView({behavior:'smooth',block:'center'});_bad.focus();}
+          var _bad=document.querySelector('.invalid');
+          if(_bad){_bad.scrollIntoView({behavior:'smooth',block:'center'});_bad.focus();}
           return;
         }
         btn.disabled=true;
         btnText.style.display='none';
         btnLoad.style.display='inline';
         error.style.display='none';
-        submitted=true;
-      });
-
-      iframe.addEventListener('load',function(){
-        if(!submitted)return;
-        showSuccess();
-        submitted=false;
-      });
-
-      form.addEventListener('submit',function(){
-        if(!submitted)return;
-        setTimeout(function(){
-          if(submitted && form.style.display!=='none'){
-            showError();
-            submitted=false;
-          }
-        },15000);
+        fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(Object.assign({
+            name:document.getElementById('f-name').value.trim(),
+            phone:document.getElementById('f-phone').value.trim(),
+            email:document.getElementById('f-email').value.trim(),
+            city:document.getElementById('f-area').value,
+            service:document.getElementById('f-service').value,
+            timeline:document.getElementById('f-timeline').value,
+            notes:document.getElementById('f-notes').value.trim(),
+            sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',
+            source:'home-page'
+          },(function(){
+            var u=new URLSearchParams(window.location.search);
+            var keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+            var utm={};var fresh=false;
+            keys.forEach(function(k){var v=u.get(k);if(v){utm[k]=v;fresh=true;}else{utm[k]=sessionStorage.getItem('px_'+k)||'';}});
+            if(fresh){try{keys.forEach(function(k){if(utm[k])sessionStorage.setItem('px_'+k,utm[k]);});}catch(err){}}
+            return utm;
+          })(),{landing_path:window.location.pathname,referrer:document.referrer||'direct'}))})
+        .then(function(){showSuccess();})
+        .catch(function(){showError();});
       });
     })();
   </script>
