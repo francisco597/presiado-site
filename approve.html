@@ -252,15 +252,23 @@
       $('f-agreewrap').classList.remove('hide');
       $('f-agreetext').textContent = 'I have read and agree to Service Agreement ' +
         (d.doc_ref || '') + (d.doc_rev ? ' (rev ' + d.doc_rev + ')' : '') + '.';
-      if (d.pdf_url) {
-        $('f-frame').src = embeddable(d.pdf_url);
-        $('f-frame').classList.remove('hide');
-      }
     } else {
       $('f-btn').textContent = isCO ? 'Approve Change Order' : 'Approve Estimate';
+      // El documento va EMBEBIDO tambien en estimados y change orders (2026-08-31).
+      // Antes solo se embebia en el Service Agreement y el estimado mostraba
+      // referencia + monto: el cliente aprobaba un NUMERO sin ver el alcance, con el
+      // PDF escondido detras de un link opcional. La doctrina D.2.1 siempre dijo
+      // "alcance + monto"; esto es lo que la cumple.
+      if (d.pdf_url) {
+        $('f-lede').textContent = 'The full ' + noun + ' is below. If it matches what we ' +
+          'discussed, type your full name and approve. That is all — nothing to print, ' +
+          'sign by hand, or scan.';
+      }
     }
 
     if (d.pdf_url) {
+      $('f-frame').src = embeddable(d.pdf_url);
+      $('f-frame').classList.remove('hide');
       $('f-pdfa').href = d.pdf_url;
       $('f-pdflink').classList.remove('hide');
     }
