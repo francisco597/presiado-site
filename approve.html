@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review &amp; Approve | Presiado Home</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1C1C1C; --charcoal-alt:#2B2B2B; --gold:#C6A768;
+    --offwhite:#F8F7F4; --cream:#F5F0E6; --graphite:#333333;
+    --muted:#6E6E6E; --hairline:#E3DED4;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--cream); color:var(--graphite);
+    font-family:"DM Sans",Arial,sans-serif; font-size:16px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 0 48px}
+  header{background:var(--charcoal);padding:24px 28px}
+  .brand{
+    font-family:"Roboto Condensed",Arial,sans-serif; text-transform:uppercase;
+    letter-spacing:1px; color:var(--offwhite); font-size:20px; font-weight:700;
+  }
+  .trust{
+    font-family:"Roboto Condensed",Arial,sans-serif; text-transform:uppercase;
+    letter-spacing:1.4px; font-size:10px; color:var(--gold); padding-top:7px;
+  }
+  main{background:var(--offwhite);padding:32px 28px;border-left:3px solid var(--gold)}
+  h1{
+    font-family:"Cormorant Garamond",Georgia,serif; font-weight:600;
+    font-size:30px; line-height:1.25; margin:0 0 6px; color:var(--charcoal);
+  }
+  .eyebrow{
+    font-family:"Roboto Condensed",Arial,sans-serif; text-transform:uppercase;
+    letter-spacing:1.4px; font-size:10px; color:var(--muted); margin:0 0 10px;
+  }
+  .doc{border-top:1px solid var(--hairline);margin:24px 0;padding-top:20px}
+  .row{display:flex;justify-content:space-between;gap:16px;padding:7px 0;font-size:15px}
+  .row .k{color:var(--muted)}
+  .row .v{font-weight:500;color:var(--charcoal);text-align:right}
+  .amount{font-family:"Cormorant Garamond",Georgia,serif;font-size:30px;font-weight:600}
+  iframe{
+    width:100%;height:520px;border:1px solid var(--hairline);
+    background:#fff;display:block;margin:18px 0;
+  }
+  label.check{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;margin:20px 0;cursor:pointer}
+  label.check input{margin-top:5px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--gold)}
+  .field{margin:22px 0 8px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+  input[type=text]{
+    width:100%;padding:13px 14px;font-family:inherit;font-size:16px;
+    border:1px solid var(--hairline);background:#fff;color:var(--charcoal);border-radius:0;
+  }
+  input[type=text]:focus{outline:2px solid var(--gold);outline-offset:-1px;border-color:var(--gold)}
+  .hint{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  button{
+    width:100%;margin-top:20px;padding:16px 24px;border:0;cursor:pointer;
+    background:var(--gold);color:var(--charcoal);
+    font-family:"DM Sans",Arial,sans-serif;font-size:16px;font-weight:700;letter-spacing:.2px;
+  }
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .err{
+    background:#FBF2F2;border-left:3px solid #A33;padding:13px 15px;
+    font-size:14.5px;margin:18px 0;color:#7A2222;
+  }
+  .ok-mark{font-size:44px;line-height:1;color:var(--gold);margin-bottom:10px}
+  footer{padding:22px 28px;font-size:13px;color:var(--muted);text-align:center}
+  footer a{color:var(--gold);text-decoration:none;font-weight:500}
+  .hide{display:none}
+  @media(max-width:520px){
+    main{padding:26px 20px}
+    h1{font-size:25px}
+    iframe{height:400px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">Presiado Home</div>
+    <div class="trust">Painting &middot; Drywall &middot; Remodeling &nbsp;|&nbsp; Sarasota, FL &middot; Insured</div>
+  </header>
+
+  <main>
+    <!-- 1. cargando -->
+    <section id="s-loading">
+      <p class="eyebrow">One moment</p>
+      <h1>Loading your document&hellip;</h1>
+    </section>
+
+    <!-- 2. error / token invalido -->
+    <section id="s-error" class="hide">
+      <p class="eyebrow">Presiado Home</p>
+      <h1 id="err-title">This link is not valid</h1>
+      <p id="err-body">We could not find a document for this link. It may have been replaced by a newer version.</p>
+      <p>Call or text me at <a href="tel:+19417043464" style="color:#C6A768;font-weight:500;text-decoration:none">(941)&nbsp;704-3464</a> and I will send you a fresh one right away.</p>
+    </section>
+
+    <!-- 3. ya aceptado -->
+    <section id="s-already" class="hide">
+      <div class="ok-mark">&#10003;</div>
+      <p class="eyebrow">Already approved</p>
+      <h1>This document is already approved</h1>
+      <p>We recorded your approval of <b id="al-ref"></b> on <b id="al-when"></b> (Eastern Time). Nothing else is needed from you.</p>
+      <p>Questions? Call or text <a href="tel:+19417043464" style="color:#C6A768;font-weight:500;text-decoration:none">(941)&nbsp;704-3464</a>.</p>
+    </section>
+
+    <!-- 4. formulario -->
+    <section id="s-form" class="hide">
+      <p class="eyebrow" id="f-eyebrow">Review &amp; approve</p>
+      <h1 id="f-title">Hi there &mdash; here is your estimate</h1>
+      <p id="f-lede">Take a look. If it matches what we discussed, type your full name below and approve. That is all &mdash; nothing to print, sign by hand, or scan.</p>
+
+      <div class="doc">
+        <div class="row"><span class="k" id="f-reflabel">Estimate</span><span class="v" id="f-ref"></span></div>
+        <div class="row" id="f-revrow"><span class="k">Revision</span><span class="v" id="f-rev"></span></div>
+        <div class="row" id="f-amtrow"><span class="k">Total</span><span class="v amount" id="f-amt"></span></div>
+      </div>
+
+      <iframe id="f-frame" class="hide" title="Document preview" loading="lazy"></iframe>
+      <p id="f-pdflink" class="hint hide">
+        <a href="#" id="f-pdfa" target="_blank" rel="noopener" style="color:#C6A768;font-weight:500;text-decoration:none">Open the full document in a new tab &rarr;</a>
+      </p>
+
+      <label class="check hide" id="f-agreewrap">
+        <input type="checkbox" id="f-agree">
+        <span id="f-agreetext">I have read and agree to this document.</span>
+      </label>
+
+      <div class="field">
+        <label for="f-name">Type your full name to approve</label>
+        <input type="text" id="f-name" autocomplete="name" placeholder="Your full name" spellcheck="false">
+        <p class="hint">Typing your name here is your electronic signature. We record it with the date and time.</p>
+      </div>
+
+      <div class="err hide" id="f-err"></div>
+      <button id="f-btn" type="button">Approve Estimate</button>
+    </section>
+
+    <!-- 5. exito -->
+    <section id="s-done" class="hide">
+      <div class="ok-mark">&#10003;</div>
+      <p class="eyebrow">Approved</p>
+      <h1>Thank you &mdash; we have it</h1>
+      <p>Your approval of <b id="d-ref"></b> was recorded on <b id="d-when"></b> (Eastern Time). I will follow up shortly about scheduling.</p>
+      <p id="d-copy" class="hide">A confirmation copy is on its way to your email &mdash; keep it for your records.</p>
+      <p>If anything does not look right, call or text me at <a href="tel:+19417043464" style="color:#C6A768;font-weight:500;text-decoration:none">(941)&nbsp;704-3464</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    Presiado Home Improvement LLC &middot; Sarasota, FL &middot; Insured<br>
+    <a href="tel:+19417043464">(941) 704-3464</a> &middot;
+    <a href="https://presiadohomegroup.com">presiadohomegroup.com</a>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzCFaPtLfmxokcVKlbFXNllIX1AmZo5NR6nl-9ZpR7UjzHBlks-Atz7Wbt6xLdA4LaPLQ/exec';
+
+  var token = new URLSearchParams(window.location.search).get('t') || '';
+  var info = null;
+  var sending = false;
+
+  function $(id) { return document.getElementById(id); }
+  function show(id) {
+    var ids = ['s-loading', 's-error', 's-already', 's-form', 's-done'];
+    for (var i = 0; i < ids.length; i++) {
+      $(ids[i]).classList.toggle('hide', ids[i] !== id);
+    }
+  }
+  function fail(title, body) {
+    if (title) $('err-title').textContent = title;
+    if (body) $('err-body').textContent = body;
+    show('s-error');
+  }
+  function money(v) {
+    var n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+    if (!isFinite(n)) return String(v || '');
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  // Un link de Drive "/view" no se puede embeber; "/preview" si.
+  function embeddable(url) {
+    var m = String(url || '').match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    var m2 = String(url || '').match(/[?&]id=([^&]+)/);
+    if (m2) return 'https://drive.google.com/file/d/' + m2[1] + '/preview';
+    return url;
+  }
+
+  // -----------------------------------------------------------------------
+  // 1. Cargar el documento
+  // -----------------------------------------------------------------------
+  if (!token) {
+    fail('This link is incomplete', 'The approval link is missing its reference code.');
+    return;
+  }
+
+  fetch(ENDPOINT + '?action=acc_info&t=' + encodeURIComponent(token))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (!d || !d.ok) { fail(); return; }
+      info = d;
+      if (d.status === 'ACCEPTED') {
+        $('al-ref').textContent = d.doc_ref || 'your document';
+        $('al-when').textContent = d.accepted_at || '';
+        show('s-already');
+        return;
+      }
+      if (d.status !== 'PENDING') {
+        fail('This link has expired', 'This document is no longer open for approval.');
+        return;
+      }
+      render(d);
+    })
+    .catch(function () {
+      fail('We could not load your document', 'Something went wrong on our side. Please try again in a moment.');
+    });
+
+  // -----------------------------------------------------------------------
+  // 2. Render
+  // -----------------------------------------------------------------------
+  function render(d) {
+    var isSA = d.doc_type === 'SERVICE_AGREEMENT';
+    var isCO = d.doc_type === 'CHANGE_ORDER';
+    var who = d.client_first_name && d.client_first_name !== 'there' ? d.client_first_name : null;
+    var noun = isSA ? 'service agreement' : (isCO ? 'change order' : 'estimate');
+
+    $('f-title').textContent = (who ? 'Hi ' + who + ' — ' : '') + 'here is your ' + noun;
+    $('f-reflabel').textContent = isSA ? 'Agreement' : (isCO ? 'Change order' : 'Estimate');
+    $('f-ref').textContent = d.doc_ref || '';
+
+    if (d.doc_rev) { $('f-rev').textContent = d.doc_rev; }
+    else { $('f-revrow').classList.add('hide'); }
+
+    if (d.amount) { $('f-amt').textContent = money(d.amount); }
+    else { $('f-amtrow').classList.add('hide'); }
+
+    if (isSA) {
+      $('f-eyebrow').textContent = 'Review & sign';
+      $('f-lede').textContent = 'Please read the full agreement below. When you are ready, check the box, type your full name, and accept.';
+      $('f-btn').textContent = 'Sign & Accept';
+      $('f-agreewrap').classList.remove('hide');
+      $('f-agreetext').textContent = 'I have read and agree to Service Agreement ' +
+        (d.doc_ref || '') + (d.doc_rev ? ' (rev ' + d.doc_rev + ')' : '') + '.';
+      if (d.pdf_url) {
+        $('f-frame').src = embeddable(d.pdf_url);
+        $('f-frame').classList.remove('hide');
+      }
+    } else {
+      $('f-btn').textContent = isCO ? 'Approve Change Order' : 'Approve Estimate';
+    }
+
+    if (d.pdf_url) {
+      $('f-pdfa').href = d.pdf_url;
+      $('f-pdflink').classList.remove('hide');
+    }
+
+    show('s-form');
+    $('f-btn').addEventListener('click', submit);
+  }
+
+  // -----------------------------------------------------------------------
+  // 3. Enviar
+  // -----------------------------------------------------------------------
+  function submit() {
+    if (sending) return;
+    var name = $('f-name').value.trim();
+    var needAgree = info.doc_type === 'SERVICE_AGREEMENT';
+    var err = $('f-err');
+
+    if (needAgree && !$('f-agree').checked) {
+      err.textContent = 'Please check the box to confirm you have read the agreement.';
+      err.classList.remove('hide');
+      return;
+    }
+    if (name.length < 2) {
+      err.textContent = 'Please type your full name.';
+      err.classList.remove('hide');
+      $('f-name').focus();
+      return;
+    }
+    err.classList.add('hide');
+
+    sending = true;
+    $('f-btn').disabled = true;
+    $('f-btn').textContent = 'Recording your approval…';
+
+    var payload = JSON.stringify({
+      action: 'acceptance',
+      token: token,
+      typed_name: name,
+      agree: needAgree ? true : undefined
+    });
+
+    // text/plain evita el preflight que Apps Script no contesta.
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payload })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { settle(d); })
+      .catch(function () {
+        // Si el navegador bloquea la lectura de la respuesta, reintentamos a
+        // ciegas y despues CONFIRMAMOS contra el servidor. No damos por
+        // aprobado nada que no podamos leer de vuelta.
+        fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body: payload })
+          .then(verify).catch(verify);
+      });
+  }
+
+  function verify() {
+    fetch(ENDPOINT + '?action=acc_info&t=' + encodeURIComponent(token))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.ok && d.status === 'ACCEPTED') {
+          settle({ ok: true, accepted_at: d.accepted_at, doc_ref: d.doc_ref });
+        } else {
+          settle({ ok: false, error: 'unconfirmed' });
+        }
+      })
+      .catch(function () { settle({ ok: false, error: 'unconfirmed' }); });
+  }
+
+  function settle(d) {
+    sending = false;
+
+    if (d && d.ok) {
+      $('d-ref').textContent = d.doc_ref || info.doc_ref || 'your document';
+      $('d-when').textContent = d.accepted_at || '';
+      if (info.doc_type === 'SERVICE_AGREEMENT') $('d-copy').classList.remove('hide');
+      show('s-done');
+      return;
+    }
+
+    var code = d && d.error;
+    if (code === 'already_accepted') {
+      $('al-ref').textContent = info.doc_ref || 'your document';
+      $('al-when').textContent = (d && d.accepted_at) || '';
+      show('s-already');
+      return;
+    }
+
+    var msg = 'We could not record your approval. Please try again, or call me at (941) 704-3464.';
+    if (code === 'missing_name')  msg = 'Please type your full name.';
+    if (code === 'missing_agree') msg = 'Please check the box to confirm you have read the agreement.';
+    if (code === 'busy')          msg = 'One moment — please tap the button again.';
+    if (code === 'unconfirmed')   msg = 'We could not confirm your approval went through. Please try again, or call me at (941) 704-3464 and I will take care of it.';
+
+    var err = $('f-err');
+    err.textContent = msg;
+    err.classList.remove('hide');
+    $('f-btn').disabled = false;
+    $('f-btn').textContent = info.doc_type === 'SERVICE_AGREEMENT' ? 'Sign & Accept'
+      : (info.doc_type === 'CHANGE_ORDER' ? 'Approve Change Order' : 'Approve Estimate');
+  }
+})();
+</script>
+</body>
+</html>
