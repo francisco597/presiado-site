@@ -23,10 +23,9 @@
   }
   .wrap{max-width:680px;margin:0 auto;padding:0 0 48px}
   header{background:var(--charcoal);padding:24px 28px}
-  .brand{
-    font-family:"Roboto Condensed",Arial,sans-serif; text-transform:uppercase;
-    letter-spacing:1px; color:var(--offwhite); font-size:20px; font-weight:700;
-  }
+  /* A.5: el logo es el archivo real de marca, nunca texto que lo imite ni un
+     redibujo. Alto fijo y ancho automatico para que no se deforme. */
+  .logo{display:block;height:44px;width:auto;max-width:100%}
   .trust{
     font-family:"Roboto Condensed",Arial,sans-serif; text-transform:uppercase;
     letter-spacing:1.4px; font-size:10px; color:var(--gold); padding-top:7px;
@@ -84,7 +83,8 @@
 <div class="wrap">
 
   <header>
-    <div class="brand">Presiado Home</div>
+    <img class="logo" src="/images/presiado-logo-gold.png"
+         alt="Presiado Home Improvement" width="132" height="44">
     <div class="trust">Painting &middot; Drywall &middot; Remodeling &nbsp;|&nbsp; Sarasota, FL &middot; Insured</div>
   </header>
 
