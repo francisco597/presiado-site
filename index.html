@@ -565,7 +565,9 @@
     </div>
   </section>
 
-  <!-- FORM (preserved per Opción 2 — Google Forms intake, feeds CRM via FORM_INTAKE trigger) -->
+  <!-- FORM — postea al webhook doPost del CRM (migrado 2026-08-30; ya NO es Google Forms).
+       Los name="entry.NNN" son vestigios de la era Google Form y hoy no se usan para nada:
+       el payload se arma por getElementById, no por name. No borrarlos sin revisar el JS. -->
   <section class="form-section" id="request-estimate">
     <div class="container">
       <div class="section-header">
@@ -629,16 +631,10 @@
               </select>
               <span class="field-error" id="err-service">Please select a service</span>
             </div>
-            <div class="field-group">
-              <label class="field-label" for="f-timeline">Project Timeline</label>
-              <select class="field-input field-select" id="f-timeline" name="entry.671391763">
-                <option value="" disabled="" selected="">When do you need it?</option>
-                <option>ASAP</option>
-                <option>Within 1 month</option>
-                <option>Within 1&ndash;3 months</option>
-                <option>Just gathering estimates</option>
-                <option>Not sure yet</option>
-              </select>
+            <div class="field-group" style="grid-column:1/-1">
+              <label class="field-label" for="f-address">Property Address <span style="color:var(--gold)">*</span></label>
+              <input class="field-input" type="text" id="f-address" name="address" placeholder="1234 Main St, Sarasota FL 34231" required="">
+              <span class="field-error" id="err-address">Please enter the property address</span>
             </div>
           </div>
           <div class="field-group" style="margin-bottom:20px;">
@@ -803,7 +799,8 @@
         {id:'f-phone',check:function(v){return v.replace(/\D/g,'').length>=10}},
         {id:'f-email',check:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}},
         {id:'f-area',check:function(v){return v!==''}},
-        {id:'f-service',check:function(v){return v!==''}}
+        {id:'f-service',check:function(v){return v!==''}},
+        {id:'f-address',check:function(v){return v.trim().length>4}}
       ];
 
       function validate(){
@@ -863,7 +860,7 @@
             email:document.getElementById('f-email').value.trim(),
             city:document.getElementById('f-area').value,
             service:document.getElementById('f-service').value,
-            timeline:document.getElementById('f-timeline').value,
+            address:document.getElementById('f-address').value.trim(),
             notes:document.getElementById('f-notes').value.trim(),
             sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',
             source:'home-page'

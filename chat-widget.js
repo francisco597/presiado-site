@@ -23,7 +23,9 @@
                   'Popcorn / Ceiling Removal', 'Water Damage Repair', 'Cabinet Painting', 'Something else'];
   var CITIES = ['Sarasota', 'Longboat Key', 'Siesta Key', 'Lakewood Ranch', 'Palmer Ranch',
                 'Bradenton', 'Venice', 'Nokomis / Osprey', 'Other'];
-  var TIMELINES = ['As soon as possible', 'Within 2 weeks', 'Within a month', 'Just getting estimates'];
+  /* El paso de plazo se retiro el 2026-09-01 (carga cero: se cambian campos, no se
+     suman). En su lugar el formulario final pide la direccion de la propiedad, que
+     es el unico dato sin el cual no se puede agendar ni medir. */
 
   // Pre-relleno por página: menos preguntas = más leads terminados.
   var PATH = (location.pathname || '').toLowerCase();
@@ -42,7 +44,7 @@
     'palmer-ranch': 'Palmer Ranch', 'sarasota': 'Sarasota'
   });
 
-  var A = { service: PRE_SERVICE, city: PRE_CITY, timeline: '', name: '', phone: '', email: '', notes: '', sms: false, ask: '' };
+  var A = { service: PRE_SERVICE, city: PRE_CITY, address: '', name: '', phone: '', email: '', notes: '', sms: false, ask: '' };
   var step = 0, sent = false, asked = {}, freeAsk = false, started = false;
 
   /* =====================================================================
@@ -277,6 +279,7 @@
   function stash() {                       // no perder lo tecleado al ir al banco
     if (!document.getElementById('pxcN')) return;
     A.name = val('pxcN'); A.phone = val('pxcP'); A.email = val('pxcE');
+    A.address = val('pxcA') || A.address;
     A.notes = val('pxcD'); A.ask = val('pxcQ') || A.ask;
     var s = document.getElementById('pxcS'); A.sms = !!(s && s.checked);
   }
@@ -331,13 +334,8 @@
     }
     if (step === 1) {
       say('Where is the project located?');
-      if (A.city) { say(esc(A.city), true); step = 2; return render(); }
-      options(CITIES, function (v) { A.city = v; step = 2; render(); });
-      return askLink();
-    }
-    if (step === 2) {
-      say('When would you like the work done?');
-      options(TIMELINES, function (v) { A.timeline = v; step = 3; render(); });
+      if (A.city) { say(esc(A.city), true); step = 3; return render(); }
+      options(CITIES, function (v) { A.city = v; step = 3; render(); });
       return askLink();
     }
     if (step === 3) {
@@ -349,6 +347,7 @@
       f.className = 'pxc-form';
       f.innerHTML =
         (freeAsk ? '<div class="pxc-f"><input id="pxcQ" type="text" placeholder="Your question" value="' + esc(A.ask) + '"></div>' : '') +
+        '<div class="pxc-f"><input id="pxcA" type="text" placeholder="Property address" autocomplete="street-address" value="' + esc(A.address) + '"></div>' +
         '<div class="pxc-f"><input id="pxcN" type="text" placeholder="Your name" autocomplete="name" value="' + esc(A.name) + '"></div>' +
         '<div class="pxc-f"><input id="pxcP" type="tel" placeholder="Phone" autocomplete="tel" inputmode="tel" value="' + esc(A.phone) + '"></div>' +
         '<div class="pxc-f"><input id="pxcE" type="email" placeholder="Email (optional)" autocomplete="email" value="' + esc(A.email) + '"></div>' +
@@ -377,9 +376,9 @@
     var qs = Object.keys(asked);
     var payload = Object.assign({
       name: A.name, phone: A.phone, email: A.email, city: A.city, service: A.service,
-      timeline: A.timeline, referral_source: 'Website chat',
+      address: A.address, referral_source: 'Website chat',
       notes: (A.ask ? 'QUESTION: ' + A.ask + ' — ' : '') + (A.notes ? A.notes + ' — ' : '') +
-             'Captured by website chat (' + A.service + ', ' + A.city + ', ' + A.timeline + ')' +
+             'Captured by website chat (' + A.service + ', ' + A.city + ')' +
              (qs.length ? ' — asked about: ' + qs.join(', ') : ''),
       sms_consent: A.sms ? 'Yes' : 'No', source: 'chat-widget'
     }, utm(), { landing_path: location.pathname, referrer: document.referrer || 'direct' });
@@ -392,7 +391,7 @@
 
   function done() {
     if (sent) return; sent = true;
-    ev('chat_lead', { service: A.service, city: A.city, timeline: A.timeline,
+    ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
                       faq_count: Object.keys(asked).length, landing_path: location.pathname });
     ev('conversion', { send_to: ADS_CONV });
     body().innerHTML = '';
