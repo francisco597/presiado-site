@@ -636,6 +636,11 @@
               <input class="field-input" type="text" id="f-address" name="address" placeholder="1234 Main St, Sarasota FL 34231" required="">
               <span class="field-error" id="err-address">Please enter the property address</span>
             </div>
+            <div class="field-group">
+              <label class="field-label" for="f-zip">ZIP Code <span style="color:var(--gold)">*</span></label>
+              <input class="field-input" type="text" id="f-zip" name="zip" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="34231" required="">
+              <span class="field-error" id="err-zip">Please enter a valid 5-digit ZIP code.</span>
+            </div>
           </div>
           <div class="field-group" style="margin-bottom:20px;">
             <label class="field-label" for="f-notes">Tell us about your project</label>
@@ -800,7 +805,8 @@
         {id:'f-email',check:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}},
         {id:'f-area',check:function(v){return v!==''}},
         {id:'f-service',check:function(v){return v!==''}},
-        {id:'f-address',check:function(v){return v.trim().length>4}}
+        {id:'f-address',check:function(v){return v.trim().length>4}},
+        {id:'f-zip',check:function(v){return /^\d{5}$/.test(v.trim())}}
       ];
 
       function validate(){
@@ -861,6 +867,7 @@
             city:document.getElementById('f-area').value,
             service:document.getElementById('f-service').value,
             address:document.getElementById('f-address').value.trim(),
+            zip:document.getElementById('f-zip').value.trim(),
             notes:document.getElementById('f-notes').value.trim(),
             sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',
             source:'home-page'
