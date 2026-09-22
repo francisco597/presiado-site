@@ -470,5 +470,87 @@
   })();
   </script>
   <script src="/chat-widget.js" defer></script>
+  <!-- PRESIADO LEAD GATE v1 (2026-09-22) — filtra solicitaciones B2B y telefonos imposibles.
+       Vive en el navegador a proposito: el form postea con mode:'no-cors', asi que un rechazo
+       del servidor mostraria "gracias" igual y el lead se perderia en silencio.
+       Se engancha en fase de CAPTURA sobre document para correr antes del handler de la pagina. -->
+  <script>
+  (function(){
+    var phoneEl = document.getElementById('f-phone');
+    if (!phoneEl || !phoneEl.form) return;
+    var form = phoneEl.form;
+
+    /* Dominios vistos prospectando por el formulario. Agregar uno es una linea mas. */
+    var DOMAINS = ['vas4hire.com', 'virtualeaseservice.com', 'allstar-estimation.com'];
+
+    /* La familia, no solo el individuo: agencias de estimacion y de asistentes virtuales. */
+    var DOMPAT = [/estimat(ing|ion|es)\./i, /(^|[.\-])vas4/i, /virtual(ease|assist)/i,
+                  /outsourc/i, /leadgen/i, /takeoffs?\./i];
+
+    /* Frases de vendedor. Un homeowner describe SU obra; un proveedor ofrece LA SUYA. */
+    var PITCH = ['we offer', 'we provide', 'our team', 'free quote', 'free consultation',
+                 'get in touch', 'our services', 'cost breakdown', 'streamline your',
+                 'best wishes', 'review our previous work', 'let’s connect',
+                 "let's connect", 'material qty', 'labor hours', 'our company',
+                 'we specialize', 'quick turnaround', 'bid proposal'];
+
+    function digits(s){ return String(s == null ? '' : s).replace(/\D/g, ''); }
+
+    /* Estructura NANP: el area y la central no pueden empezar en 0 o 1, y el area no es N11. */
+    function phoneImpossible(v){
+      var d = digits(v);
+      if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+      if (d.length !== 10) return true;
+      var npa = d.slice(0, 3), nxx = d.slice(3, 6);
+      if (npa.charAt(0) === '0' || npa.charAt(0) === '1') return true;
+      if (npa.charAt(1) === '1' && npa.charAt(2) === '1') return true;
+      if (nxx.charAt(0) === '0' || nxx.charAt(0) === '1') return true;
+      return false;
+    }
+
+    function domainBlocked(v){
+      var m = /@([^@\s]+)$/.exec(String(v == null ? '' : v).trim().toLowerCase());
+      if (!m) return false;
+      var d = m[1];
+      if (DOMAINS.indexOf(d) > -1) return true;
+      for (var i = 0; i < DOMPAT.length; i++) if (DOMPAT[i].test(d)) return true;
+      return false;
+    }
+
+    /* Dos coincidencias, no una: "we provide" solo no basta para descartar a una persona. */
+    function isSolicitation(v){
+      var t = String(v == null ? '' : v).toLowerCase(), hits = 0;
+      for (var i = 0; i < PITCH.length; i++) if (t.indexOf(PITCH[i]) > -1) hits++;
+      return hits >= 2;
+    }
+
+    /* Al bot se le muestra el exito de siempre: si ve un error, vuelve con otra variante. */
+    function silentDrop(e){
+      e.preventDefault(); e.stopImmediatePropagation();
+      var s = document.getElementById('form-success');
+      if (s) { form.style.display = 'none'; s.style.display = 'block'; }
+    }
+
+    document.addEventListener('submit', function(e){
+      if (e.target !== form) return;
+
+      var emailEl = document.getElementById('f-email');
+      var notesEl = document.getElementById('f-notes');
+
+      if (domainBlocked(emailEl && emailEl.value) ||
+          isSolicitation(notesEl && notesEl.value)) { silentDrop(e); return; }
+
+      /* El telefono si avisa: una persona real se equivoca tecleando y puede corregirlo. */
+      if (phoneImpossible(phoneEl.value)) {
+        e.preventDefault(); e.stopImmediatePropagation();
+        phoneEl.classList.add('invalid');
+        var err = document.getElementById('err-phone');
+        if (err) err.textContent = 'Please enter a valid US phone number.';
+        phoneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        phoneEl.focus();
+      }
+    }, true);
+  })();
+  </script>
 </body>
 </html>
