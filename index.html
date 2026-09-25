@@ -641,6 +641,15 @@
               <input class="field-input" type="text" id="f-zip" name="zip" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="34231" required="">
               <span class="field-error" id="err-zip">Please enter a valid 5-digit ZIP code.</span>
             </div>
+            <div class="field-group">
+              <label class="field-label" for="f-referral">How did you hear about us?</label>
+              <select class="field-input field-select" id="f-referral" name="referral_source">
+                <option value="" disabled="" selected="">Choose one (optional)</option>
+                <option>Google Search</option><option>Google Maps</option><option>AI search (ChatGPT / Gemini)</option>
+                <option>Facebook / Instagram</option><option>Nextdoor</option><option>Referred by a friend or neighbor</option>
+                <option>Saw our work / sign / truck</option><option>Returning customer</option><option>Other</option>
+              </select>
+            </div>
           </div>
           <div class="field-group" style="margin-bottom:20px;">
             <label class="field-label" for="f-notes">Tell us about your project</label>
@@ -870,6 +879,7 @@
             zip:document.getElementById('f-zip').value.trim(),
             notes:document.getElementById('f-notes').value.trim(),
             sms_consent:document.getElementById('f-sms-consent').checked?'Yes':'No',
+            referral_source:document.getElementById('f-referral').value,
             source:'home-page'
           },(function(){
             var u=new URLSearchParams(window.location.search);
