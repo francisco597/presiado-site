@@ -71,7 +71,9 @@
   .ok-mark{font-size:44px;line-height:1;color:var(--gold);margin-bottom:10px}
   footer{padding:22px 28px;font-size:13px;color:var(--muted);text-align:center}
   footer a{color:var(--gold);text-decoration:none;font-weight:500}
-  .hide{display:none}
+  /* !important: `label.check` es mas especifico que `.hide` y dejaba la casilla
+     del contrato visible tambien en los estimados. */
+  .hide{display:none !important}
   @media(max-width:520px){
     main{padding:26px 20px}
     h1{font-size:25px}
@@ -134,7 +136,7 @@
         <span id="f-agreetext">I have read and agree to this document.</span>
       </label>
 
-      <div class="field">
+      <div class="field hide" id="f-namewrap">
         <label for="f-name">Type your full name to approve</label>
         <input type="text" id="f-name" autocomplete="name" placeholder="Your full name" spellcheck="false">
         <p class="hint">Typing your name here is your electronic signature. We record it with the date and time.</p>
@@ -149,7 +151,7 @@
       <div class="ok-mark">&#10003;</div>
       <p class="eyebrow">Approved</p>
       <h1>Thank you &mdash; we have it</h1>
-      <p>Your approval of <b id="d-ref"></b> was recorded on <b id="d-when"></b> (Eastern Time). I will follow up shortly about scheduling.</p>
+      <p>Your approval of <b id="d-ref"></b> was recorded on <b id="d-when"></b> (Eastern Time). <span id="d-next">I will follow up shortly about scheduling.</span></p>
       <p id="d-copy" class="hide">A confirmation copy is on its way to your email &mdash; keep it for your records.</p>
       <p>If anything does not look right, call or text me at <a href="tel:+19417043464" style="color:#C6A768;font-weight:500;text-decoration:none">(941)&nbsp;704-3464</a>.</p>
     </section>
@@ -223,7 +225,10 @@
       render(d);
     })
     .catch(function () {
-      fail('We could not load your document', 'Something went wrong on our side. Please try again in a moment.');
+      // La causa casi nunca se puede saber desde aca (red del cliente, navegador
+      // embebido del correo, falla transitoria): no se la atribuimos a nadie.
+      fail('We could not connect', 'Please check your connection and try again in a moment, ' +
+        'or open this link in your phone’s regular browser.');
     });
 
   // -----------------------------------------------------------------------
@@ -252,21 +257,24 @@
       $('f-agreewrap').classList.remove('hide');
       $('f-agreetext').textContent = 'I have read and agree to Service Agreement ' +
         (d.doc_ref || '') + (d.doc_rev ? ' (rev ' + d.doc_rev + ')' : '') + '.';
+      $('f-namewrap').classList.remove('hide');
     } else {
+      // APROBACION DE UN CLIC (owner 2026-10-17). El PDF del estimado viaja
+      // ADJUNTO en el correo: el cliente ya lo leyo antes de llegar aca. Esta
+      // pagina solo confirma, sin visor y sin nombre tecleado — la identidad la
+      // da el token de su correo. El paso de confirmacion existe a proposito:
+      // los filtros de correo abren los links para revisarlos, y abrir el link
+      // no puede aprobar nada.
+      $('f-eyebrow').textContent = 'Approve';
       $('f-btn').textContent = isCO ? 'Approve Change Order' : 'Approve Estimate';
-      // El documento va EMBEBIDO tambien en estimados y change orders (2026-08-31).
-      // Antes solo se embebia en el Service Agreement y el estimado mostraba
-      // referencia + monto: el cliente aprobaba un NUMERO sin ver el alcance, con el
-      // PDF escondido detras de un link opcional. La doctrina D.2.1 siempre dijo
-      // "alcance + monto"; esto es lo que la cumple.
-      if (d.pdf_url) {
-        $('f-lede').textContent = 'The full ' + noun + ' is below. If it matches what we ' +
-          'discussed, type your full name and approve. That is all — nothing to print, ' +
-          'sign by hand, or scan.';
-      }
+      $('f-lede').textContent = 'The full ' + noun + ' is the PDF attached to my email. ' +
+        'If it matches what we discussed, tap the button below. That is all — nothing to ' +
+        'print, sign, or scan.';
     }
 
-    if (d.pdf_url) {
+    // El visor embebido queda solo para el Service Agreement: un estimado se lee
+    // en el PDF adjunto, y el visor de Drive pide sesion de Google al cliente.
+    if (isSA && d.pdf_url) {
       $('f-frame').src = embeddable(d.pdf_url);
       $('f-frame').classList.remove('hide');
       $('f-pdfa').href = d.pdf_url;
@@ -291,7 +299,7 @@
       err.classList.remove('hide');
       return;
     }
-    if (name.length < 2) {
+    if (needAgree && name.length < 2) {
       err.textContent = 'Please type your full name.';
       err.classList.remove('hide');
       $('f-name').focus();
@@ -342,7 +350,10 @@
     if (d && d.ok) {
       $('d-ref').textContent = d.doc_ref || info.doc_ref || 'your document';
       $('d-when').textContent = d.accepted_at || '';
-      if (info.doc_type === 'SERVICE_AGREEMENT') $('d-copy').classList.remove('hide');
+      $('d-copy').classList.remove('hide');
+      if (info.doc_type !== 'SERVICE_AGREEMENT') {
+        $('d-next').textContent = 'Next, I will send you the service agreement for this work.';
+      }
       show('s-done');
       return;
     }
