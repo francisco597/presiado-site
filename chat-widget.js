@@ -83,12 +83,12 @@
   };
 
   var WARRANTY =
-    'Every project is backed by <b>Presiado Complete Coverage</b>:<br>' +
-    '&bull; 3-Year Limited Workmanship Warranty (subject to written project agreement)<br>' +
+    'Every project includes written coverage:<br>' +
+    '&bull; Limited Workmanship Warranty &mdash; 1 year on standard projects, 3 years on projects of $10,000 or more (<b>Presiado Complete Coverage</b>), subject to your written project agreement<br>' +
     '&bull; Manufacturer Paint Warranty (up to 25 yrs)<br>' +
     '&bull; 30-Day Complimentary Touch-Up<br>' +
     '&bull; Lifetime Color Documentation<br>' +
-    'If a workmanship defect shows up within those 3 years, we come back and correct it at no cost to you.';
+    'If a workmanship defect shows up within your warranty term, we come back and correct it at no cost to you.';
 
   // Preguntas específicas por servicio (solo aparecen donde aplican).
   var EXTRAS = {
