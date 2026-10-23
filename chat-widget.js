@@ -386,21 +386,54 @@
     // text/plain = petición simple (sin preflight) y la respuesta del CRM se puede leer.
     // El CRM devuelve lead_id SOLO si aceptó el lead; a un rechazo (spam) le contesta
     // {status:'ok'} sin lead_id. La conversión de Ads cuenta solo leads aceptados.
+    // Resultado:  lead_id -> gracias + conversión · {status:'ok'} sin lead_id (rechazo) -> gracias,
+    // sin conversión (no se le avisa al bot) · error, red o respuesta ilegible -> NO se confirma:
+    // se pide llamar o reintentar. Una respuesta tardía se sigue midiendo mientras la página siga
+    // abierta (la conversión no depende del tiempo de espera).
+    var lento = setTimeout(function () {
+      if (!sent) err.textContent = 'Still sending… If this takes too long, call ' + PHONE + '.';
+    }, 12000);
     fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(payload) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (res) { done(!!(res && res.lead_id)); })
-      .catch(function () { done(false); });
-    setTimeout(function () { if (!sent) done(false); }, 6000);     // sin respuesta: gracias, sin conversión
+      .then(function (res) {
+        clearTimeout(lento);
+        if (res && res.lead_id) { medir(res.lead_id); return done(); }
+        if (res && res.status === 'ok') return done();                 // rechazo: gracias, sin medir
+        fallo();
+      })
+      .catch(function () { clearTimeout(lento); fallo(); });
   }
 
-  function done(aceptado) {
+  function fallo() {
+    if (sent) return;
+    var err = document.getElementById('pxcErr'), btn = document.getElementById('pxcGo');
+    if (!err || !btn) return;
+    err.innerHTML = 'We couldn\'t confirm your message was received. Please try again, or call ' +
+      '<a href="tel:' + TEL + '" style="color:#C6A768;font-weight:500">' + PHONE + '</a>.';
+    btn.disabled = false; btn.textContent = 'Try again →';
+  }
+
+  // Una conversión por lead (transaction_id) y, en este navegador, una por persona+servicio en
+  // 24 h: un segundo envío de la misma persona entra al CRM igual (no se fusiona nada), pero no
+  // vuelve a contar como conversión de Ads. Misma huella que los formularios (px_conv_fp).
+  function medir(id) {
+    ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
+                      faq_count: Object.keys(asked).length, landing_path: location.pathname, lead_id: id });
+    try {
+      var k = 'px_conv_' + id;
+      if (localStorage.getItem(k)) return;
+      localStorage.setItem(k, '1');
+      var fp = [(A.email || '').trim().toLowerCase(), (A.phone || '').replace(/\D/g, ''), A.service].join('|');
+      var p = JSON.parse(localStorage.getItem('px_conv_fp') || '{}');
+      if (p.fp === fp && Date.now() - p.t < 864e5) return;
+      localStorage.setItem('px_conv_fp', JSON.stringify({ fp: fp, t: Date.now() }));
+    } catch (e) {}
+    ev('conversion', { send_to: ADS_CONV, transaction_id: id });
+  }
+
+  function done() {
     if (sent) return; sent = true;
-    if (aceptado) {
-      ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
-                        faq_count: Object.keys(asked).length, landing_path: location.pathname });
-      ev('conversion', { send_to: ADS_CONV });
-    }
     body().innerHTML = '';
     say('Thank you, ' + esc(A.name.split(' ')[0]) + '. ' +
         (A.ask ? 'Francisco will answer your question personally, usually the same day.'
