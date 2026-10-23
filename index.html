@@ -800,7 +800,7 @@
     // Form handler — webhook al CRM (mismo patron que estimate.html; migrado 2026-08-30.
     // El Google Form del home no arrastraba UTM/referrer: 2 de 8 WON entraron sin atribucion.)
     (function(){
-      function pxConv(id){if(!id||typeof gtag!=='function')return;var k='px_conv_'+id;try{if(localStorage.getItem(k))return;localStorage.setItem(k,'1');var g=function(i){var e=document.getElementById(i);return e?String(e.value||''):'';};var fp=[g('f-email').trim().toLowerCase(),g('f-phone').replace(/\D/g,''),g('f-service')].join('|');var p=JSON.parse(localStorage.getItem('px_conv_fp')||'{}');if(p.fp===fp&&Date.now()-p.t<864e5)return;localStorage.setItem('px_conv_fp',JSON.stringify({fp:fp,t:Date.now()}));}catch(e){}gtag('event','conversion',{send_to:'AW-17985883107/ia0-COWe5qkcEOOXq4BD',transaction_id:id});}
+      function pxConv(id){if(!id||typeof gtag!=='function')return;try{var k='px_conv_'+id;if(localStorage.getItem(k))return;localStorage.setItem(k,'1');}catch(e){}gtag('event','conversion',{send_to:'AW-17985883107/ia0-COWe5qkcEOOXq4BD',transaction_id:id});}
       var SCRIPT_URL='https://script.google.com/macros/s/AKfycbzCFaPtLfmxokcVKlbFXNllIX1AmZo5NR6nl-9ZpR7UjzHBlks-Atz7Wbt6xLdA4LaPLQ/exec';
       var form=document.getElementById('estimate-form');
       var success=document.getElementById('form-success');
@@ -886,7 +886,7 @@
             var u=new URLSearchParams(window.location.search);
             var keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
             var utm={};var fresh=false;
-            keys.forEach(function(k){var v=u.get(k);if(v){utm[k]=v;fresh=true;}else{utm[k]=sessionStorage.getItem('px_'+k)||'';}});
+            keys.forEach(function(k){var v=u.get(k);if(v){utm[k]=v;fresh=true;}else{try{utm[k]=sessionStorage.getItem('px_'+k)||'';}catch(e){utm[k]='';}}});
             if(fresh){try{keys.forEach(function(k){if(utm[k])sessionStorage.setItem('px_'+k,utm[k]);});}catch(err){}}
             return utm;
           })(),{landing_path:window.location.pathname,referrer:document.referrer||'direct'}))})

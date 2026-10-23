@@ -165,7 +165,7 @@
   function utm() {
     var u = new URLSearchParams(location.search), keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
     var o = {}, fresh = false;
-    keys.forEach(function (k) { var v = u.get(k); if (v) { o[k] = v; fresh = true; } else { o[k] = sessionStorage.getItem('px_' + k) || ''; } });
+    keys.forEach(function (k) { var v = u.get(k); if (v) { o[k] = v; fresh = true; } else { try { o[k] = sessionStorage.getItem('px_' + k) || ''; } catch (e) { o[k] = ''; } } });
     if (fresh) { try { keys.forEach(function (k) { if (o[k]) sessionStorage.setItem('px_' + k, o[k]); }); } catch (e) {} }
     return o;
   }
@@ -214,7 +214,8 @@
   var panel = null, tip = null;
 
   function tipShow() {
-    if (panel || tip || sessionStorage.getItem('pxc_tip')) return;
+    var visto = false; try { visto = !!sessionStorage.getItem('pxc_tip'); } catch (e) {}
+    if (panel || tip || visto) return;
     tip = document.createElement('div');
     tip.className = 'pxc-tip';
     tip.innerHTML = '<span class="pxc-x">&times;</span><b>Presiado Home</b>Have a project in mind? Tell us in 30 seconds and we\'ll get back to you.';
@@ -414,9 +415,10 @@
     btn.disabled = false; btn.textContent = 'Try again →';
   }
 
-  // Una conversión por lead (transaction_id) y, en este navegador, una por persona+servicio en
-  // 24 h: un segundo envío de la misma persona entra al CRM igual (no se fusiona nada), pero no
-  // vuelve a contar como conversión de Ads. Misma huella que los formularios (px_conv_fp).
+  // Una conversión de Ads por lead_id: marca local (sin datos personales) + transaction_id, que
+  // Ads usa para descartar el mismo lead repetido. Dos altas distintas (dos lead_id) cuentan dos:
+  // no se adivina si son la misma persona ni el mismo proyecto. chat_lead (GA4) va aparte y
+  // no se deduplica.
   function medir(id) {
     ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
                       faq_count: Object.keys(asked).length, landing_path: location.pathname, lead_id: id });
@@ -424,11 +426,7 @@
       var k = 'px_conv_' + id;
       if (localStorage.getItem(k)) return;
       localStorage.setItem(k, '1');
-      var fp = [(A.email || '').trim().toLowerCase(), (A.phone || '').replace(/\D/g, ''), A.service].join('|');
-      var p = JSON.parse(localStorage.getItem('px_conv_fp') || '{}');
-      if (p.fp === fp && Date.now() - p.t < 864e5) return;
-      localStorage.setItem('px_conv_fp', JSON.stringify({ fp: fp, t: Date.now() }));
-    } catch (e) {}
+    } catch (e) {}                          // sin almacenamiento: transaction_id sigue protegiendo
     ev('conversion', { send_to: ADS_CONV, transaction_id: id });
   }
 
