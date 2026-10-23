@@ -868,7 +868,7 @@
         btnText.style.display='none';
         btnLoad.style.display='inline';
         error.style.display='none';
-        fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+        fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
           body:JSON.stringify(Object.assign({
             name:document.getElementById('f-name').value.trim(),
             phone:document.getElementById('f-phone').value.trim(),
@@ -889,7 +889,7 @@
             if(fresh){try{keys.forEach(function(k){if(utm[k])sessionStorage.setItem('px_'+k,utm[k]);});}catch(err){}}
             return utm;
           })(),{landing_path:window.location.pathname,referrer:document.referrer||'direct'}))})
-        .then(function(){showSuccess();})
+        .then(function(r){return r.json().catch(function(){return {};});}).then(function(res){if(res.status==='error'){error.style.display='block';btn.disabled=false;btnText.style.display='inline';btnLoad.style.display='none';return;}showSuccess(!!res.lead_id);})
         .catch(function(){showError();});
       });
     })();
@@ -917,8 +917,8 @@
   })();
   </script>
   <!-- PRESIADO LEAD GATE v1 (2026-09-22) — filtra solicitaciones B2B y telefonos imposibles.
-       Vive en el navegador a proposito: el form postea con mode:'no-cors', asi que un rechazo
-       del servidor mostraria "gracias" igual y el lead se perderia en silencio.
+       Vive en el navegador a proposito: el CRM contesta 'ok' aunque rechace (para no avisarle a
+       los bots), asi que un rechazo del servidor mostraria "gracias" igual y el lead se perderia en silencio.
        Se engancha en fase de CAPTURA sobre document para correr antes del handler de la pagina. -->
   <script>
   (function(){

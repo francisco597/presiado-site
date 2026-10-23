@@ -383,17 +383,24 @@
       sms_consent: A.sms ? 'Yes' : 'No', source: 'chat-widget'
     }, utm(), { landing_path: location.pathname, referrer: document.referrer || 'direct' });
 
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+    // text/plain = petición simple (sin preflight) y la respuesta del CRM se puede leer.
+    // El CRM devuelve lead_id SOLO si aceptó el lead; a un rechazo (spam) le contesta
+    // {status:'ok'} sin lead_id. La conversión de Ads cuenta solo leads aceptados.
+    fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(payload) })
-      .then(done).catch(done);
-    setTimeout(function () { if (!sent) done(); }, 6000);          // no-cors no da respuesta útil
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (res) { done(!!(res && res.lead_id)); })
+      .catch(function () { done(false); });
+    setTimeout(function () { if (!sent) done(false); }, 6000);     // sin respuesta: gracias, sin conversión
   }
 
-  function done() {
+  function done(aceptado) {
     if (sent) return; sent = true;
-    ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
-                      faq_count: Object.keys(asked).length, landing_path: location.pathname });
-    ev('conversion', { send_to: ADS_CONV });
+    if (aceptado) {
+      ev('chat_lead', { service: A.service, city: A.city, has_address: A.address ? 'yes' : 'no',
+                        faq_count: Object.keys(asked).length, landing_path: location.pathname });
+      ev('conversion', { send_to: ADS_CONV });
+    }
     body().innerHTML = '';
     say('Thank you, ' + esc(A.name.split(' ')[0]) + '. ' +
         (A.ask ? 'Francisco will answer your question personally, usually the same day.'
