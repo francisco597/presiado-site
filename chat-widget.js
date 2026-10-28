@@ -136,7 +136,7 @@
     { k: 'time', q: 'How long does the work take?', a: function () { return TIME[A.service] || TIME._; } },
     { k: 'warranty', q: 'What does your warranty cover?', a: WARRANTY },
     { k: 'insured', q: 'Are you insured?',
-      a: 'Yes. Presiado Home Improvement LLC is a registered Florida LLC carrying general liability insurance and workers&rsquo; compensation coverage. Documentation is included with every written proposal.' },
+      a: 'Yes. Presiado Home Improvement LLC is a registered Florida LLC carrying general liability insurance. Documentation is included with every written proposal.' },
     { k: 'estimate', q: 'What happens at the estimate?',
       a: 'It is free and there is no pressure. We walk the space with you, take measurements and photos, and send back one itemized written proposal &mdash; scope, products, timeline and price &mdash; so you can compare it against anything else you are looking at.' },
     { k: 'paint', q: 'What products do you use?',
