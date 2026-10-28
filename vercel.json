@@ -3,6 +3,11 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/.github/:path*",
+      "destination": "/",
+      "permanent": false
+    },
+    {
       "source": "/drywall-contractor-sarasota",
       "destination": "/drywall-finishing-sarasota",
       "permanent": true
