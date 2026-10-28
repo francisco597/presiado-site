@@ -9,10 +9,10 @@
       "id": "licensed-claim",
       "pattern": "\\blicens\\w*",
       "why": "Presiado NO tiene licencia de contratista en Florida (FS 489). Ninguna forma de 'licensed/licensing' aplicada a Presiado.",
-      "allow": [
-        "What insurance certifications or licensing covers your storm damage work\\?"
-      ],
-      "allow_files": ["how-to-choose-a-painter-sarasota-fl.html"]
+      "allow": [],
+      "allow_files": [
+        "how-to-choose-a-painter-sarasota-fl.html"
+      ]
     },
     {
       "id": "licensed-claim-strict",
@@ -36,7 +36,9 @@
       "pattern": "\\bworkers.?\\s*comp(ensation)?\\b",
       "why": "Presiado no tiene poliza de workers' compensation (owner 2026-10-25). Solo general liability.",
       "allow": [],
-      "allow_files": ["how-to-choose-a-painter-sarasota-fl.html"]
+      "allow_files": [
+        "how-to-choose-a-painter-sarasota-fl.html"
+      ]
     },
     {
       "id": "workers-comp-strict",
@@ -49,7 +51,9 @@
       "id": "luxury",
       "pattern": "\\bluxury\\b|\\bluxurious\\b",
       "why": "Posicionamiento 'luxury' retirado: Presiado es 'premium process for projects of any size'.",
-      "allow": ["\\bluxury vinyl\\b"],
+      "allow": [
+        "\\bluxury vinyl\\b"
+      ],
       "allow_files": []
     },
     {
@@ -70,7 +74,9 @@
       "id": "off-positioning",
       "pattern": "\\bcheap\\b|\\baffordable\\b|\\bbudget[- ](friendly|painter|painting)\\b|\\bexclusive\\b|\\belite\\b|\\bultra[- ]high[- ]end\\b|\\bluxury[- ]only\\b|\\bdiscerning\\b|\\b100\\s*%\\s*residential\\b",
       "why": "Fuera de posicionamiento: ni barato ni exclusivo (Brand Guide v2 §3.3).",
-      "allow": ["\\bexclusive jurisdiction\\b"],
+      "allow": [
+        "\\bexclusive jurisdiction\\b"
+      ],
       "allow_files": []
     },
     {
