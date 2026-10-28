@@ -1,0 +1,97 @@
+{
+  "_doc": [
+    "Reglas de cumplimiento del sitio. Fuente: Brand Guide v2 §3.3 y §7.1, BLINDAJE CLIENT-FACING y decisiones del owner.",
+    "Cada regla: id, pattern (regex, sin distinguir mayusculas), why (por que existe), allow (frases que la hacen legitima; deben contener el hallazgo), allow_files (archivos donde la palabra es consejo general, no una afirmacion sobre Presiado).",
+    "Para cambiar una regla se edita ESTE archivo. El owner decide la regla una vez; el control la aplica en cada cambio."
+  ],
+  "rules": [
+    {
+      "id": "licensed-claim",
+      "pattern": "\\blicens\\w*",
+      "why": "Presiado NO tiene licencia de contratista en Florida (FS 489). Ninguna forma de 'licensed/licensing' aplicada a Presiado.",
+      "allow": [],
+      "allow_files": [
+        "how-to-choose-a-painter-sarasota-fl.html"
+      ]
+    },
+    {
+      "id": "licensed-claim-strict",
+      "pattern": "(\\bpresiado\\b|\\bwe\\b|\\bour\\b)[^.<]{0,80}\\blicens\\w*|\\blicensed\\s*(&|and)\\s*insured|\\bfully licensed\\b|\\blicensed (contractor|painter|professional)s?\\b",
+      "why": "Afirmacion de licencia sobre Presiado. Se revisa en TODOS los archivos, incluida la guia.",
+      "allow": [],
+      "allow_files": []
+    },
+    {
+      "id": "general-contractor",
+      "pattern": "\\bgeneral contractor\\b|\\bGC\\b|\\bCGC\\b|\\bCRC\\b|\\bstate[- ](certified|licensed)\\b|\\blicense\\s*#",
+      "why": "Presiado no es contratista general ni certificado por el Estado.",
+      "allow": [
+        "\\bnot a general contractor\\b",
+        "\\bAct as a general contractor\\b"
+      ],
+      "allow_files": []
+    },
+    {
+      "id": "workers-comp",
+      "pattern": "\\bworkers.?\\s*comp(ensation)?\\b",
+      "why": "Presiado no tiene poliza de workers' compensation (owner 2026-10-25). Solo general liability.",
+      "allow": [],
+      "allow_files": [
+        "how-to-choose-a-painter-sarasota-fl.html"
+      ]
+    },
+    {
+      "id": "workers-comp-strict",
+      "pattern": "(\\bpresiado\\b|\\bwe\\b|\\bour\\b)[^.<]{0,100}\\bworkers.?\\s*comp|\\bfully insured\\b|\\bbonded\\b",
+      "why": "Afirmacion de cobertura que Presiado no tiene. Se revisa en TODOS los archivos.",
+      "allow": [],
+      "allow_files": []
+    },
+    {
+      "id": "luxury",
+      "pattern": "\\bluxury\\b|\\bluxurious\\b",
+      "why": "Posicionamiento 'luxury' retirado: Presiado es 'premium process for projects of any size'.",
+      "allow": [
+        "\\bluxury vinyl\\b"
+      ],
+      "allow_files": []
+    },
+    {
+      "id": "absolute-warranty",
+      "pattern": "\\bguaranteed\\b|\\blifetime\\s+(workmanship\\s+)?(warranty|guarantee)\\b|\\bunconditional\\w*|\\bpermanent\\w*|\\bno questions asked\\b|\\bno conditions\\b|\\bforever warranty\\b|\\b100\\s*%\\s*(satisfaction|guarantee)",
+      "why": "Promesas absolutas de garantia prohibidas. La garantia es 'Limited' y depende del proyecto.",
+      "allow": [],
+      "allow_files": []
+    },
+    {
+      "id": "inflation",
+      "pattern": "\\bamazing\\b|\\bbest ever\\b|\\bworld[- ]class\\b|\\bincredible\\b|\\bstunning\\b|\\btransformative\\b|\\bmagical\\b|\\blove your home again\\b|\\b(top[- ]rated|award[- ]winning|number one)\\b|#1\\s+(painter|painting|contractor|in\\b)",
+      "why": "Lenguaje inflado o ranking sin prueba (Brand Guide v2 §3.3).",
+      "allow": [],
+      "allow_files": []
+    },
+    {
+      "id": "off-positioning",
+      "pattern": "\\bcheap\\b|\\baffordable\\b|\\bbudget[- ](friendly|painter|painting)\\b|\\bexclusive\\b|\\belite\\b|\\bultra[- ]high[- ]end\\b|\\bluxury[- ]only\\b|\\bdiscerning\\b|\\b100\\s*%\\s*residential\\b",
+      "why": "Fuera de posicionamiento: ni barato ni exclusivo (Brand Guide v2 §3.3).",
+      "allow": [
+        "\\bexclusive jurisdiction\\b"
+      ],
+      "allow_files": []
+    },
+    {
+      "id": "emotional",
+      "pattern": "\\bwe care about your family\\b|\\byour home is your sanctuary\\b|\\bfall in love with your home\\b",
+      "why": "Apelaciones emocionales fuera de la voz de marca (Brand Guide v2 §3.3).",
+      "allow": [],
+      "allow_files": []
+    },
+    {
+      "id": "retired-claims",
+      "pattern": "\\bdirector of sales\\b|\\bwhite glove (workmanship )?(warranty|guarantee)\\b|\\ball required (local )?permits\\b|\\bno subcontractor\\b|\\baggregateRating\\b|\\bratingValue\\b",
+      "why": "Afirmaciones retiradas por el owner: titulo viejo, garantia 'White Glove', permisos, subcontratistas y rating escrito a mano.",
+      "allow": [],
+      "allow_files": []
+    }
+  ]
+}
